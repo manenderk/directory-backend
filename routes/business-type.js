@@ -2,23 +2,11 @@ const express = require('express');
 const BusinessType = require('../models/business-types.model');
 const router = express.Router();
 const config = require('../config');
-const fs = require('fs');
-
-
 const multer = require('multer');
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const path = 'public' + config.uploadDirectories.businessType;
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path);
-    }
-    cb(null, path);
-  },
-  filename: (req, file, cb) => {
-    const newFileName = Date.now() + file.originalname.toLowerCase().split(' ').join('-');
-    cb(null, newFileName);
-  }
-});
+const commonStorage = require('../utils/file-storage');
+
+
+const storage = commonStorage(config.uploadDirectories.businessType);
 
 
 // GET ALL BUSINESS TYPES
