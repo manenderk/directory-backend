@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 //#region Router Imports
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const BusinessTypeRouter = require('./routes/business-type');
 //#endregion
 
 //#region Express Configuration
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 });
 //#endregion
 
+mongoose.set('useNewUrlParser', true);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useUnifiedTopology', true);
@@ -40,6 +42,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/theDirectoryDb')
 //#region Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/business-types', BusinessTypeRouter);
 //#endregion
 
 module.exports = app;
