@@ -1,5 +1,5 @@
 const express = require('express')
-const BusinessType = require('../models/business-types.model')
+const BusinessType = require('../models/business-type.model')
 const router = express.Router()
 const config = require('../config')
 const multer = require('multer')
