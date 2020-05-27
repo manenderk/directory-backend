@@ -34,13 +34,26 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+// GET ALL FEATURED BUSINESS TYPES
+router.get('/filter/featured', async (req, res, next) => {
+  try {
+    const businessTypes = await BusinessType.find({
+      featured: true
+    });
+    res.status(200).json(businessTypes);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+})
+
 // ADD Business Type
 router.post('/', multer({storage}).single('thumbnail'), async (req, res, next) => {
   try {
     const businessType = new BusinessType({
       name: req.body.name,
       thumbnail: req.file ? config.uploadDirectories.businessType + '/' + req.file.filename : null,
-      parentBusinessTypeId: req.body.parentBusinessTypeId,
+      parentBusinessTypeId: req.body.parentBusinessTypeId && req.body.parentBusinessTypeId != 'null' ? req.body.parentBusinessTypeId : null,
+      featured: req.body.featured,
       active: req.body.active
     });
 
@@ -61,11 +74,13 @@ router.put('/:id', multer({storage}).single('thumbnail'), async(req, res, next) 
       name: req.body.name,
       thumbnail: req.file ? config.uploadDirectories.businessType + '/' + req.file.filename : req.body.thumbnail,
       parentBusinessTypeId: req.body.parentBusinessTypeId,
+      featured: req.body.featured,
       active: req.body.active
     });
     const updatedBusinessType = await BusinessType.findByIdAndUpdate(
       req.params.id,
-      businessType
+      businessType,
+      {new: true}
     );
     res.status(200).json(updatedBusinessType);
   } catch (e) {

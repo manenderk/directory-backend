@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
-const BusinessTypeModel = mongoose.Schema(
+const BusinessTypeModel = new mongoose.Schema(
     {
         name: { type: String, required: true, unique: true },
         thumbnail: { type: String },
@@ -9,6 +9,7 @@ const BusinessTypeModel = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'BusinessType',
         },
+        featured: { type: Boolean, default: false},
         active: { type: Boolean, default: true },
     },
     {
