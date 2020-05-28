@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const BusinessImageSchema = new mongoose.Schema({
   businessId: {

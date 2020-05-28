@@ -15,7 +15,7 @@ router.get('/', async (req, res, next) => {
 // GET SINGLE BUSINESS TYPE
 router.get('/:id', async (req, res, next) => {
   try {
-    const business = await Business.findById(req.params.id)
+    const business = await Business.findById(req.params.id).populate('owner')
     if (business) {
       res.status(200).json(business)
     } else {
