@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const BusinesImage = require('../models/business-image.model')
-const config = require('../config')
-const fileStorage = require('../utils/file-storage')
+const BusinesImage = require('@models/business/business-image.model')
+const config = require('@root/config')
+const fileStorage = require('@root/utils/file-storage')
 const storage = fileStorage(config.uploadDirectories.businessImage)
 const multer = require('multer')
 

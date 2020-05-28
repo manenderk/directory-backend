@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Business = require('../models/business.model')
+const Business = require('@models/business/business.model')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {

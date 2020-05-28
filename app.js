@@ -1,4 +1,6 @@
 // #region Packages Import
+// eslint-disable-next-line no-unused-vars
+const moduleAlias = require('module-alias/register')
 const express = require('express')
 const path = require('path')
 const cookieParser = require('cookie-parser')
@@ -7,11 +9,12 @@ const mongoose = require('mongoose')
 // #endregion
 
 // #region Router Imports
-const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
-const BusinessTypeRouter = require('./routes/business-type')
-const BusinessRouter = require('./routes/business')
-const BusinessImageRouter = require('./routes/business-image')
+const indexRouter = require('@routes/index')
+const usersRouter = require('@routes/user/users')
+const BusinessTypeRouter = require('@routes/business/business-type')
+const BusinessRouter = require('@routes/business/business')
+const BusinessImageRouter = require('@routes/business/business-image')
+const MenuRouter = require('@routes/restaurant/menu')
 // #endregion
 
 // #region Express Configuration
@@ -45,6 +48,7 @@ app.use('/users', usersRouter)
 app.use('/business-types', BusinessTypeRouter)
 app.use('/businesses', BusinessRouter)
 app.use('/business-images', BusinessImageRouter)
+app.use('/menus', MenuRouter)
 // #endregion
 
 module.exports = app

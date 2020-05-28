@@ -1,9 +1,9 @@
 const express = require('express')
-const BusinessType = require('../models/business-type.model')
+const BusinessType = require('@models/business/business-type.model')
 const router = express.Router()
-const config = require('../config')
+const config = require('@root/config')
 const multer = require('multer')
-const commonStorage = require('../utils/file-storage')
+const commonStorage = require('@root/utils/file-storage')
 
 const storage = commonStorage(config.uploadDirectories.businessType)
 

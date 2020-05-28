@@ -7,12 +7,20 @@
     "dev": "nodemon ./bin/www",
     "db": "mongod --dbpath D:\\mongo-dbs-directory\\theDirectoryDb"
   },
+  "_moduleAliases": {
+    "@middlewares": "./middlewares",
+    "@models": "./models",
+    "@routes": "./routes",
+    "@public": "./public",
+    "@root": "."
+  },
   "dependencies": {
     "bcrypt": "^4.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "mongoose": "^5.9.16",
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "~1.9.1",
