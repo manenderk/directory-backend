@@ -1,7 +1,8 @@
 const config = {
-    uploadDirectories: {
-        businessType: '/uploads/business-types'
-    }
-};
+  uploadDirectories: {
+    businessType: '/uploads/business-types',
+    businessImage: '/uploads/business-image'
+  }
+}
 
-module.exports = config;
+module.exports = config

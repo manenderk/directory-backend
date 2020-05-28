@@ -11,6 +11,7 @@ const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 const BusinessTypeRouter = require('./routes/business-type')
 const BusinessRouter = require('./routes/business')
+const BusinessImageRouter = require('./routes/business-image')
 // #endregion
 
 // #region Express Configuration
@@ -43,6 +44,7 @@ app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/business-types', BusinessTypeRouter)
 app.use('/businesses', BusinessRouter)
+app.use('/business-images', BusinessImageRouter)
 // #endregion
 
 module.exports = app
