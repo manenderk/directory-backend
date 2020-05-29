@@ -1,7 +1,7 @@
 const multer = require('multer')
 const fs = require('fs')
 
-module.exports = (path) => {
+module.exports = (path, fieldName, type = null, maxSize = null) => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       const completePath = 'public' + path
@@ -17,5 +17,11 @@ module.exports = (path) => {
       cb(null, newFileName)
     }
   })
-  return storage
+
+  if (!type || type === 'single') {
+    return multer({ storage }).single(fieldName)
+  } else {
+    console.log('test1')
+    return multer({ storage }).array(fieldName, maxSize)
+  }
 }

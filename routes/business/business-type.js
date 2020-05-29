@@ -2,10 +2,8 @@ const express = require('express')
 const BusinessType = require('@models/business/business-type.model')
 const router = express.Router()
 const config = require('@root/config')
-const multer = require('multer')
-const commonStorage = require('@root/utils/file-storage')
-
-const storage = commonStorage(config.uploadDirectories.businessType)
+const multerStorage = require('@root/utils/file-uploader')
+const uploader = multerStorage(config.uploadDirectories.businessType, 'thumbnail')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
@@ -44,7 +42,7 @@ router.get('/filter/featured', async (req, res, next) => {
 })
 
 // ADD Business Type
-router.post('/', multer({ storage }).single('thumbnail'), async (req, res, next) => {
+router.post('/', uploader, async (req, res, next) => {
   try {
     const businessType = new BusinessType({
       name: req.body.name,
@@ -63,7 +61,7 @@ router.post('/', multer({ storage }).single('thumbnail'), async (req, res, next)
 })
 
 // UPDATE BUSINESS TYPE
-router.put('/:id', multer({ storage }).single('thumbnail'), async (req, res, next) => {
+router.put('/:id', uploader, async (req, res, next) => {
   try {
     const businessType = new BusinessType({
       _id: req.params.id,

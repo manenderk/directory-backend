@@ -3,16 +3,14 @@ const router = express.Router()
 const Menu = require('@models/restaurant/menu.model.js')
 
 const config = require('@root/config')
-const multer = require('multer')
-const commonStorage = require('@root/utils/file-storage')
-
-const storage = commonStorage(config.uploadDirectories.businessType)
+const multerStorage = require('@root/utils/file-uploader')
+const uploader = multerStorage(config.uploadDirectories.menu, 'thumbnail')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
   try {
     const documents = await Menu.find()
-    res.status(200).json(config)
+    res.status(200).json(documents)
   } catch (e) {
     res.status(500).json(e)
   }
@@ -21,9 +19,9 @@ router.get('/', async (req, res, next) => {
 // GET SINGLE BUSINESS TYPE
 router.get('/:id', async (req, res, next) => {
   try {
-    const businessType = await BusinessType.findById(req.params.id)
-    if (businessType) {
-      res.status(200).json(businessType)
+    const menu = await Menu.findById(req.params.id)
+    if (menu) {
+      res.status(200).json(menu)
     } else {
       res.sendStatus(401)
     }
@@ -35,27 +33,27 @@ router.get('/:id', async (req, res, next) => {
 // GET ALL FEATURED BUSINESS TYPES
 router.get('/filter/featured', async (req, res, next) => {
   try {
-    const businessTypes = await BusinessType.find({
+    const menus = await Menu.find({
       featured: true
     })
-    res.status(200).json(businessTypes)
+    res.status(200).json(menus)
   } catch (e) {
     res.status(500).json(e)
   }
 })
 
 // ADD Business Type
-router.post('/', multer({ storage }).single('thumbnail'), async (req, res, next) => {
+router.post('/', uploader, async (req, res, next) => {
   try {
-    const businessType = new BusinessType({
+    const menu = new Menu({
       name: req.body.name,
-      thumbnail: req.file ? config.uploadDirectories.businessType + '/' + req.file.filename : null,
-      parentBusinessTypeId: req.body.parentBusinessTypeId && req.body.parentBusinessTypeId !== 'null' ? req.body.parentBusinessTypeId : null,
+      thumbnail: req.file ? config.uploadDirectories.menu + '/' + req.file.filename : null,
+      parentMenuId: req.body.parentMenuId && req.body.parentMenuId !== 'null' ? req.body.parentMenuId : null,
       featured: req.body.featured,
       active: req.body.active
     })
 
-    const result = await businessType.save()
+    const result = await menu.save()
 
     res.status(201).json(result)
   } catch (e) {
@@ -64,22 +62,22 @@ router.post('/', multer({ storage }).single('thumbnail'), async (req, res, next)
 })
 
 // UPDATE BUSINESS TYPE
-router.put('/:id', multer({ storage }).single('thumbnail'), async (req, res, next) => {
+router.put('/:id', uploader, async (req, res, next) => {
   try {
-    const businessType = new BusinessType({
+    const menu = new Menu({
       _id: req.params.id,
       name: req.body.name,
-      thumbnail: req.file ? config.uploadDirectories.businessType + '/' + req.file.filename : req.body.thumbnail,
-      parentBusinessTypeId: req.body.parentBusinessTypeId,
+      thumbnail: req.file ? config.uploadDirectories.menu + '/' + req.file.filename : req.body.thumbnail,
+      parentMenuId: req.body.parentMenuId && req.body.parentMenuId !== 'null' ? req.body.parentMenuId : null,
       featured: req.body.featured,
       active: req.body.active
     })
-    const updatedBusinessType = await BusinessType.findByIdAndUpdate(
+    const updatedMenu = await Menu.findByIdAndUpdate(
       req.params.id,
-      businessType,
+      menu,
       { new: true }
     )
-    res.status(200).json(updatedBusinessType)
+    res.status(200).json(updatedMenu)
   } catch (e) {
     res.status(500).json(e)
   }
@@ -88,7 +86,7 @@ router.put('/:id', multer({ storage }).single('thumbnail'), async (req, res, nex
 // Clean up business types
 router.delete('/all', async (req, res, next) => {
   try {
-    await BusinessType.collection.drop()
+    await Menu.collection.drop()
     res.sendStatus(200)
   } catch (e) {
     res.status(500).json(e)
