@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "bcrypt": "^4.0.1",
+    "compression": "^1.7.4",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "mongoose": "^5.9.16",
