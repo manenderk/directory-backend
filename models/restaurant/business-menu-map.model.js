@@ -8,6 +8,14 @@ const BusinessMenuMapSchema = mongoose.Schema({
   menuId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Menu'
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  },
+  active: {
+    type: Boolean,
+    default: true
   }
 }, {
   timeStamps: true

@@ -21,7 +21,6 @@ module.exports = (path, fieldName, type = null, maxSize = null) => {
   if (!type || type === 'single') {
     return multer({ storage }).single(fieldName)
   } else {
-    console.log('test1')
     return multer({ storage }).array(fieldName, maxSize)
   }
 }
