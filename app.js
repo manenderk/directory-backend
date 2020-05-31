@@ -15,6 +15,7 @@ const BusinessTypeRouter = require('@routes/business/business-type.route')
 const BusinessRouter = require('@routes/business/business.route')
 const BusinessImageRouter = require('@routes/business/business-image.route')
 const MenuCategoryRouter = require('@routes/restaurant/menu-category.route')
+const MenuItemRouter = require('@routes/restaurant/menu-item.route')
 // #endregion
 
 // #region Express Configuration
@@ -49,6 +50,7 @@ app.use('/business-types', BusinessTypeRouter)
 app.use('/businesses', BusinessRouter)
 app.use('/business-images', BusinessImageRouter)
 app.use('/menu-categories', MenuCategoryRouter)
+app.use('/menu-items', MenuItemRouter)
 // #endregion
 
 module.exports = app
