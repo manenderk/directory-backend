@@ -2,7 +2,7 @@ const config = {
   uploadDirectories: {
     businessType: '/uploads/business-types',
     businessImage: '/uploads/business-image',
-    menu: '/uploads/menu'
+    menuCategories: '/uploads/menu-categories'
   }
 }
 
