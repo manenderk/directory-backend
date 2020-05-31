@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const MenuCategory = require('@models/restaurant/menu-category.model')
 const config = require('@root/config')
-const fileUploader = require('@root/utils/file-uploader')(config.uploadDirectories.MenuCategorym, 'thumbnail')
+const fileUploader = require('@root/utils/file-uploader')(config.uploadDirectories.menuCategories, 'thumbnail')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -29,7 +29,7 @@ router.post('/', fileUploader, async (req, res, next) => {
     const category = new MenuCategory({
       businessId: req.body.businessId,
       name: req.body.name,
-      thumbnail: req.file ? req.file.filename : null,
+      thumbnail: req.file ? config.uploadDirectories.menuCategories + '/' + req.file.filename : null,
       featured: req.body.featured,
       active: req.body.active
     })
@@ -46,7 +46,7 @@ router.put('/:id', fileUploader, async (req, res, next) => {
       req.params.id, {
         businessId: req.body.businessId,
         name: req.body.name,
-        thumbnail: req.file ? req.file.filename : req.body.thumbnail,
+        thumbnail: req.file ? config.uploadDirectories.menuCategories + '/' + req.file.filename : req.body.thumbnail,
         featured: req.body.featured,
         active: req.body.active
       }, {
