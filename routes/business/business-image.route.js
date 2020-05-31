@@ -2,8 +2,7 @@ const express = require('express')
 const router = express.Router()
 const BusinesImage = require('@models/business/business-image.model')
 const config = require('@root/config')
-const multerStorage = require('@root/utils/file-uploader')
-const uploader = multerStorage(config.uploadDirectories.businessImage, 'images', 'array', 5)
+const uploader = require('@root/utils/file-uploader')(config.uploadDirectories.businessImage, 'images', 'array', 5)
 
 router.get('/', async (req, res, next) => {
   try {

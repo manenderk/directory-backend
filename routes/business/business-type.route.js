@@ -2,8 +2,7 @@ const express = require('express')
 const BusinessType = require('@models/business/business-type.model')
 const router = express.Router()
 const config = require('@root/config')
-const multerStorage = require('@root/utils/file-uploader')
-const uploader = multerStorage(config.uploadDirectories.businessType, 'thumbnail')
+const uploader = require('@root/utils/file-uploader')(config.uploadDirectories.businessType, 'thumbnail')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {

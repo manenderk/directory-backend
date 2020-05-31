@@ -10,10 +10,10 @@ const mongoose = require('mongoose')
 
 // #region Router Imports
 const indexRouter = require('@routes/index')
-const usersRouter = require('@routes/user/users')
-const BusinessTypeRouter = require('@routes/business/business-type')
-const BusinessRouter = require('@routes/business/business')
-const BusinessImageRouter = require('@routes/business/business-image')
+const usersRouter = require('@routes/user/users.route')
+const BusinessTypeRouter = require('@routes/business/business-type.route')
+const BusinessRouter = require('@routes/business/business.route')
+const BusinessImageRouter = require('@routes/business/business-image.route')
 const MenuCategoryRouter = require('@routes/restaurant/menu-category.route')
 // #endregion
 
