@@ -14,8 +14,6 @@ const usersRouter = require('@routes/user/users')
 const BusinessTypeRouter = require('@routes/business/business-type')
 const BusinessRouter = require('@routes/business/business')
 const BusinessImageRouter = require('@routes/business/business-image')
-const MenuRouter = require('@routes/restaurant/menu')
-const BusinessMenuMapRouter = require('@routes/restaurant/business-menu-map')
 // #endregion
 
 // #region Express Configuration
@@ -49,8 +47,6 @@ app.use('/users', usersRouter)
 app.use('/business-types', BusinessTypeRouter)
 app.use('/businesses', BusinessRouter)
 app.use('/business-images', BusinessImageRouter)
-app.use('/menus', MenuRouter)
-app.use('/business-menu-map', BusinessMenuMapRouter)
 // #endregion
 
 module.exports = app
