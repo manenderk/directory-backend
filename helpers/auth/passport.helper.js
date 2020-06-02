@@ -57,7 +57,5 @@ passport.use(new LocalStrategy({
   }
 }))
 
-module.exports = passport
-
 // passport.authenticate('jwt', { session: false })
 // passport.authenticate('local', { session: false })
