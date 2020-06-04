@@ -8,6 +8,7 @@ const logger = require('morgan')
 const compression = require('compression')
 const mongoose = require('mongoose')
 const helmet = require('helmet')
+const cors = require('cors')
 // #endregion
 
 // #region Router Imports
@@ -20,6 +21,7 @@ const BusinessReviewRouter = require('@routes/business/business-review.route')
 const MenuCategoryRouter = require('@routes/restaurant/menu-category.route')
 const MenuItemRouter = require('@routes/restaurant/menu-item.route')
 const MenuItemReviewRouter = require('@routes/restaurant/menu-item-review.route')
+const DropdownRouter = require('@routes/common/dropdown.route')
 // #endregion
 
 // #region Express Configuration
@@ -32,12 +34,20 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use((req, res, next) => {
+const corsOptions = {
+  origin: '*',
+  methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization, Origin, Accept',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}
+app.use(cors(corsOptions))
+/* app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Headers', 'Orgin, X-Requested-With, Content-Type, Accept, Authorization')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
   next()
-})
+}) */
 // #endregion
 
 mongoose.set('useNewUrlParser', true)
@@ -59,6 +69,7 @@ app.use('/business-review', BusinessReviewRouter)
 app.use('/menu-categories', MenuCategoryRouter)
 app.use('/menu-items', MenuItemRouter)
 app.use('/menu-item-reviews', MenuItemReviewRouter)
+app.use('/dropdown', DropdownRouter)
 // #endregion
 
 module.exports = app
