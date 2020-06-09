@@ -85,7 +85,7 @@ router.put('/:id', async (req, res, next) => {
       business,
       { new: true }
     )
-    res.status(201).json(updatedBusiness)
+    res.status(200).json(updatedBusiness)
   } catch (e) {
     res.status(500).json(e)
   }

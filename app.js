@@ -55,7 +55,7 @@ mongoose.set('useCreateIndex', true)
 mongoose.set('useFindAndModify', false)
 mongoose.set('useUnifiedTopology', true)
 
-mongoose.connect('mongodb://127.0.0.1:27017/theDirectoryDb')
+mongoose.connect('mongodb+srv://clusteruser:Zx8eHnhzG2vENf1k@app-cluster-t6cjp.mongodb.net/TheDirectory?retryWrites=true&w=majority')
   .then(() => console.log('Connected to database'))
   .catch(() => console.log('Database connection error'))
 
