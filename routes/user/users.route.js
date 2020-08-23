@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const User = require('@models/user/user.model')
-const authHelper = require('@helpers/auth/auth.helper')
-const passportHelper = require('@helpers/auth/passport.helper')
 
 // GET ALL USERS
 router.get('/', async (req, res, next) => {
@@ -32,7 +30,7 @@ router.post('/', async (req, res, next) => {
   try {
     var password = ''
     if (req.body.password) {
-      password = await authHelper.encryptPassword(req.body.password)
+      // password = await authHelper.encryptPassword(req.body.password)
     }
     const user = new User({
       firstName: req.body.firstName,
@@ -76,24 +74,6 @@ router.delete('/:id', async (req, res, next) => {
     await User.findByIdAndDelete(req.params.id)
     res.sendStatus(200)
   } catch (e) {
-    res.status(500).json(e)
-  }
-})
-
-router.post('/auth/login', async (req, res, next) => {
-  try {
-    passportHelper.authenticate('local', { session: false }, async (err, user, info) => {
-      if (err) {
-        return res.status(500).json(err)
-      }
-      if (!user) {
-        return res.sendStatus(401)
-      }
-      const signature = await authHelper.generateSignature(user)
-      return res.status(200).json(signature)
-    })
-  } catch (e) {
-    console.log(e)
     res.status(500).json(e)
   }
 })

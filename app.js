@@ -14,7 +14,7 @@ const cors = require('cors')
 // #region Router Imports
 const indexRouter = require('@routes/index')
 const usersRouter = require('@routes/user/users.route')
-const BusinessTypeRouter = require('@routes/business/business-type.route')
+const CategoryRouter = require('@routes/category/category.route')
 const BusinessRouter = require('@routes/business/business.route')
 const BusinessImageRouter = require('@routes/business/business-image.route')
 const BusinessReviewRouter = require('@routes/business/business-review.route')
@@ -42,12 +42,6 @@ const corsOptions = {
   optionsSuccessStatus: 204
 }
 app.use(cors(corsOptions))
-/* app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Headers', 'Orgin, X-Requested-With, Content-Type, Accept, Authorization')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
-  next()
-}) */
 // #endregion
 
 mongoose.set('useNewUrlParser', true)
@@ -55,14 +49,17 @@ mongoose.set('useCreateIndex', true)
 mongoose.set('useFindAndModify', false)
 mongoose.set('useUnifiedTopology', true)
 
-mongoose.connect('mongodb+srv://clusteruser:Zx8eHnhzG2vENf1k@app-cluster-t6cjp.mongodb.net/TheDirectory?retryWrites=true&w=majority')
+mongoose.connect('mongodb://127.0.0.1:27017/theDirectoryDb')
   .then(() => console.log('Connected to database'))
   .catch(() => console.log('Database connection error'))
+/* mongoose.connect('mongodb+srv://clusteruser:Zx8eHnhzG2vENf1k@app-cluster-t6cjp.mongodb.net/TheDirectory?retryWrites=true&w=majority')
+  .then(() => console.log('Connected to database'))
+  .catch(() => console.log('Database connection error')) */
 
 // #region Routes
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
-app.use('/business-types', BusinessTypeRouter)
+app.use('/category', CategoryRouter)
 app.use('/businesses', BusinessRouter)
 app.use('/business-images', BusinessImageRouter)
 app.use('/business-review', BusinessReviewRouter)
