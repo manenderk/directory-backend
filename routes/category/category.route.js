@@ -2,7 +2,7 @@ const express = require('express')
 const Category = require('@models/category/category.model')
 const router = express.Router()
 const config = require('@root/config')
-const uploader = require('@root/utils/file-uploader')(config.uploadDirectories.category, 'thumbnail')
+const uploader = require('@root/utils/file-uploader')(config.uploadDirectories.category, 'thumbnailFile')
 
 // GET ALL CATEGORYS
 router.get('/', async (req, res, next) => {

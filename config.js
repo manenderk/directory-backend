@@ -1,5 +1,6 @@
 const config = {
   uploadDirectories: {
+    category: '/uploads/category',
     businessType: '/uploads/business-types',
     businessImage: '/uploads/business-image',
     menuCategories: '/uploads/menu-categories',
