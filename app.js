@@ -57,16 +57,16 @@ mongoose.connect('mongodb://127.0.0.1:27017/theDirectoryDb')
   .catch(() => console.log('Database connection error')) */
 
 // #region Routes
-app.use('/api/', indexRouter)
-app.use('/api/users', usersRouter)
-app.use('/api/category', CategoryRouter)
-app.use('/api/businesses', BusinessRouter)
-app.use('/api/business-images', BusinessImageRouter)
-app.use('/api/business-review', BusinessReviewRouter)
-app.use('/api/menu-categories', MenuCategoryRouter)
-app.use('/api/menu-items', MenuItemRouter)
-app.use('/api/menu-item-reviews', MenuItemReviewRouter)
-app.use('/api/dropdown', DropdownRouter)
+app.use('/', indexRouter)
+app.use('/users', usersRouter)
+app.use('/category', CategoryRouter)
+app.use('/businesses', BusinessRouter)
+app.use('/business-images', BusinessImageRouter)
+app.use('/business-review', BusinessReviewRouter)
+app.use('/menu-categories', MenuCategoryRouter)
+app.use('/menu-items', MenuItemRouter)
+app.use('/menu-item-reviews', MenuItemReviewRouter)
+app.use('/dropdown', DropdownRouter)
 // #endregion
 
 module.exports = app
