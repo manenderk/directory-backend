@@ -19,7 +19,7 @@ module.exports = (path, fieldName, type = null, maxSize = null) => {
   })
 
   if (!type || type === 'single') {
-    return multer({ storage }).single(fieldName)
+    return multer({ storage, limits: { fieldSize: 25 * 1024 * 1024 } }).single(fieldName)
   } else {
     return multer({ storage }).array(fieldName, maxSize)
   }

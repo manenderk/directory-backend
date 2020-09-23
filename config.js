@@ -1,4 +1,6 @@
 const config = {
+  projectRoot: __dirname,
+  uploadDirectory: '/uploads',
   uploadDirectories: {
     category: '/uploads/category',
     businessType: '/uploads/business-types',
