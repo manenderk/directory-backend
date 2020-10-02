@@ -62,8 +62,21 @@ router.get('/', async (req, res, next) => {
       }
     }
 
-    const medias = await Media.find(filters)
+    const medias = await Media.find(filters).sort({ createdAt: -1 })
     res.status(200).json(medias)
+  } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      res.status(400)
+    } else {
+      const media = await Media.findById(req.params.id)
+      res.status(200).json(media)
+    }
   } catch (e) {
     res.status(500).json(e)
   }
