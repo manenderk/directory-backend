@@ -4,8 +4,11 @@ const CategorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
     description: { type: String },
-    thumbnail: { type: String },
-    parentBusinessTypeId: {
+    image: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Media'
+    },
+    parentCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category'
     },

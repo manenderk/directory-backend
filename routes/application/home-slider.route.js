@@ -3,8 +3,14 @@ const router = express.Router()
 const HomeSlider = require('@models/application/home-slider.model')
 
 router.get('/', async (req, res, next) => {
+  console.log(req.query)
+
   try {
-    const sliders = await HomeSlider.find().sort({ createdAt: -1 }).populate('image')
+    const filters = {}
+    if (req.query.active && req.query.active === 'true') {
+      filters.active = true
+    }
+    const sliders = await HomeSlider.find(filters).sort({ createdAt: -1 }).populate('image')
     res.status(200).json(sliders)
   } catch (e) {
     res.status(500).json(e)
