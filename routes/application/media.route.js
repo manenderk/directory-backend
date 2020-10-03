@@ -26,9 +26,7 @@ router.post('/upload', uploader, async (req, res, next) => {
           throw (err)
         }
         if (filepath) {
-          const fileName = filepath.split(path.sep).pop()
-          media.fileName = fileName
-          media.path = config.uploadDirectory + '/' + fileName
+          media.path = config.uploadDirectory + '/' + filepath.split(path.sep).pop()
           await media.save()
           res.status(201).json(media)
         } else {

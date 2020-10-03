@@ -43,12 +43,13 @@ router.put('/:id', async (req, res, next) => {
       link: req.body.link,
       active: req.body.active
     })
-    const updatedSlier = await HomeSlider.findByIdAndUpdate(
+    let updatedSlider = await HomeSlider.findByIdAndUpdate(
       req.params.id,
       slider,
       { new: true }
     )
-    res.status(200).json(updatedSlier)
+    updatedSlider = await HomeSlider.findById(updatedSlider._id).populate('image')
+    res.status(200).json(updatedSlider)
   } catch (error) {
     res.status(500).json(error)
   }
