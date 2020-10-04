@@ -2,6 +2,15 @@ const express = require('express')
 const router = express.Router()
 const PricingPackage = require('@models/application/pricing-package.model')
 
+router.get('/', async (req, res, next) => {
+  try {
+    const pricings = await PricingPackage.find()
+    res.status(200).json(pricings)
+  } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
 router.get('/:id', async (req, res, next) => {
   try {
     const pricingpackage = await PricingPackage.findById(req.params.id)

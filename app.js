@@ -26,6 +26,7 @@ const MediaRouter = require('@routes/application/media.route')
 const HomeSliderRouter = require('@routes/application/home-slider.route')
 const PersonRouter = require('@routes/application/person.route')
 const PricingPackageRouter = require('@routes/application/pricing-package.route')
+const EventRouter = require('@routes/event/event.route')
 // #endregion
 
 // #region Express Configuration
@@ -75,6 +76,7 @@ app.use('/media', MediaRouter)
 app.use('/home-slider', HomeSliderRouter)
 app.use('/person', PersonRouter)
 app.use('/pricing-package', PricingPackageRouter)
+app.use('/event', EventRouter)
 // #endregion
 
 module.exports = app

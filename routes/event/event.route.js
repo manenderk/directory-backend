@@ -9,10 +9,10 @@ router.get('/', async (req, res, next) => {
       .populate('thumbnailImage')
       .populate('bannerImage')
       .populate('presentedBy')
-      .populate('InAssociationWith')
-      .populate('Sponsors')
-      .populate('Pricing')
-      .populate('Contacts')
+      .populate('inAssociationWith')
+      .populate('sponsors')
+      .populate('pricings')
+      .populate('contacts')
     res.status(200).json(documents)
   } catch (e) {
     res.status(500).json(e)
@@ -26,10 +26,10 @@ router.get('/id/:id', async (req, res, next) => {
       .populate('thumbnailImage')
       .populate('bannerImage')
       .populate('presentedBy')
-      .populate('InAssociationWith')
-      .populate('Sponsors')
-      .populate('Pricing')
-      .populate('Contacts')
+      .populate('inAssociationWith')
+      .populate('sponsors')
+      .populate('pricings')
+      .populate('contacts')
     res.status(200).json(event)
   } catch (e) {
     res.status(500).json(e)
@@ -58,7 +58,7 @@ router.post('/', async (req, res, next) => {
       date: req.body.date,
       address: req.body.address,
       thumbnailImage: req.body.thumbnailImage,
-      banerImage: req.body.bannerImage,
+      bannerImage: req.body.bannerImage,
       description: req.body.description,
       featured: req.body.featured,
       active: req.body.active,
@@ -68,7 +68,7 @@ router.post('/', async (req, res, next) => {
       inAssociationWith: req.body.inAssociationWith,
       sponsors: req.body.sponsors,
       pricings: req.body.pricings,
-      ticketsLocation: req.body.ticketsLocation,
+      ticketsLocations: req.body.ticketsLocations,
       contacts: req.body.contacts
     })
 
@@ -77,10 +77,10 @@ router.post('/', async (req, res, next) => {
       .populate('thumbnailImage')
       .populate('bannerImage')
       .populate('presentedBy')
-      .populate('InAssociationWith')
-      .populate('Sponsors')
-      .populate('Pricing')
-      .populate('Contacts')
+      .populate('inAssociationWith')
+      .populate('sponsors')
+      .populate('pricings')
+      .populate('contacts')
     res.status(201).json(event)
   } catch (e) {
     res.status(500).json(e)
@@ -96,7 +96,7 @@ router.put('/:id', async (req, res, next) => {
       date: req.body.date,
       address: req.body.address,
       thumbnailImage: req.body.thumbnailImage,
-      banerImage: req.body.bannerImage,
+      bannerImage: req.body.bannerImage,
       description: req.body.description,
       featured: req.body.featured,
       active: req.body.active,
@@ -106,7 +106,7 @@ router.put('/:id', async (req, res, next) => {
       inAssociationWith: req.body.inAssociationWith,
       sponsors: req.body.sponsors,
       pricings: req.body.pricings,
-      ticketsLocation: req.body.ticketsLocation,
+      ticketsLocations: req.body.ticketsLocations,
       contacts: req.body.contacts
     })
     await Event.findByIdAndUpdate(
@@ -117,10 +117,10 @@ router.put('/:id', async (req, res, next) => {
       .populate('thumbnailImage')
       .populate('bannerImage')
       .populate('presentedBy')
-      .populate('InAssociationWith')
-      .populate('Sponsors')
-      .populate('Pricing')
-      .populate('Contacts')
+      .populate('inAssociationWith')
+      .populate('sponsors')
+      .populate('pricings')
+      .populate('contacts')
     res.status(200).json(event)
   } catch (e) {
     res.status(500).json(e)

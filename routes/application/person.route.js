@@ -2,6 +2,15 @@ const express = require('express')
 const router = express.Router()
 const Person = require('@models/application/person.model')
 
+router.get('/', async (req, res, next) => {
+  try {
+    const persons = await Person.find()
+    res.status(200).json(persons)
+  } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
 router.get('/:id', async (req, res, next) => {
   try {
     const person = await Person.findById(req.params.id)
