@@ -28,7 +28,7 @@ router.get('/frontend', async (req, res, next) => {
     const categories = await Category.find({
       active: true
     }).sort({
-      featured: 1, order: 1, createdAt: -1
+      featured: -1, order: 1, createdAt: -1
     }).populate('image').populate('parentCategory')
     res.status(200).json(categories)
   } catch (e) {
