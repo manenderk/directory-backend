@@ -3,8 +3,6 @@ const router = express.Router()
 const HomeSlider = require('@models/application/home-slider.model')
 
 router.get('/', async (req, res, next) => {
-  console.log(req.query)
-
   try {
     const filters = {}
     if (req.query.active && req.query.active === 'true') {
