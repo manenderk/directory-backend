@@ -24,6 +24,8 @@ const MenuItemReviewRouter = require('@routes/restaurant/menu-item-review.route'
 const DropdownRouter = require('@routes/common/dropdown.route')
 const MediaRouter = require('@routes/application/media.route')
 const HomeSliderRouter = require('@routes/application/home-slider.route')
+const PersonRouter = require('@routes/application/person.route')
+const PricingPackageRouter = require('@routes/application/pricing-package.route')
 // #endregion
 
 // #region Express Configuration
@@ -71,6 +73,8 @@ app.use('/menu-item-reviews', MenuItemReviewRouter)
 app.use('/dropdown', DropdownRouter)
 app.use('/media', MediaRouter)
 app.use('/home-slider', HomeSliderRouter)
+app.use('/person', PersonRouter)
+app.use('/pricing-package', PricingPackageRouter)
 // #endregion
 
 module.exports = app

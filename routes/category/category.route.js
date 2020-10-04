@@ -81,13 +81,4 @@ router.put('/:id', async (req, res, next) => {
   }
 })
 
-// Clean up categories
-router.delete('/all', async (req, res, next) => {
-  try {
-    await Category.collection.drop()
-    res.sendStatus(200).json('')
-  } catch (e) {
-    res.status(500).json(e)
-  }
-})
 module.exports = router

@@ -16,6 +16,6 @@
         "titleBar.inactiveBackground": "#673ab799",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "jslint.version": "es6",
     "editor.tabSize": 2,
+    "eslint.trace.server": "messages",
 }
