@@ -4,21 +4,28 @@ const EventSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     date: { type: Date },
-    address: { type: String },
+    time: { type: Date },
+    location: { type: String },
     description: { type: String },
     thumbnailImage: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Media'
+      ref: 'Media',
+      required: true
     },
     bannerImage: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Media'
+      ref: 'Media',
+      required: true
     },
     featured: { type: Boolean, default: false },
     active: { type: Boolean, default: true },
     order: { type: Number, default: 1000 },
     socialLinks: [{
       type: String
+    }],
+    eventImages: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Media'
     }],
     presentedBy: [{
       type: mongoose.Schema.Types.ObjectId,

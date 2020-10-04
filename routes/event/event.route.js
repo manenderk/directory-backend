@@ -8,6 +8,7 @@ router.get('/', async (req, res, next) => {
     const documents = await Event.find().sort({ createdAt: -1 })
       .populate('thumbnailImage')
       .populate('bannerImage')
+      .populate('eventImages')
       .populate('presentedBy')
       .populate('inAssociationWith')
       .populate('sponsors')
@@ -25,6 +26,7 @@ router.get('/id/:id', async (req, res, next) => {
     const event = await Event.findById(req.params.id)
       .populate('thumbnailImage')
       .populate('bannerImage')
+      .populate('eventImages')
       .populate('presentedBy')
       .populate('inAssociationWith')
       .populate('sponsors')
@@ -56,13 +58,15 @@ router.post('/', async (req, res, next) => {
     let event = new Event({
       name: req.body.name,
       date: req.body.date,
-      address: req.body.address,
+      time: req.body.time,
+      location: req.body.location,
       thumbnailImage: req.body.thumbnailImage,
       bannerImage: req.body.bannerImage,
       description: req.body.description,
       featured: req.body.featured,
       active: req.body.active,
       order: req.body.order,
+      eventImages: req.body.eventImages,
       socialLinks: req.body.socialLinks,
       presentedBy: req.body.presentedBy,
       inAssociationWith: req.body.inAssociationWith,
@@ -76,6 +80,7 @@ router.post('/', async (req, res, next) => {
     event = await Event.findById(event._id)
       .populate('thumbnailImage')
       .populate('bannerImage')
+      .populate('eventImages')
       .populate('presentedBy')
       .populate('inAssociationWith')
       .populate('sponsors')
@@ -94,7 +99,8 @@ router.put('/:id', async (req, res, next) => {
       _id: req.params.id,
       name: req.body.name,
       date: req.body.date,
-      address: req.body.address,
+      time: req.body.time,
+      location: req.body.location,
       thumbnailImage: req.body.thumbnailImage,
       bannerImage: req.body.bannerImage,
       description: req.body.description,
@@ -102,6 +108,7 @@ router.put('/:id', async (req, res, next) => {
       active: req.body.active,
       order: req.body.order,
       socialLinks: req.body.socialLinks,
+      eventImages: req.body.eventImages,
       presentedBy: req.body.presentedBy,
       inAssociationWith: req.body.inAssociationWith,
       sponsors: req.body.sponsors,
@@ -116,6 +123,7 @@ router.put('/:id', async (req, res, next) => {
     event = await Event.findById(event._id)
       .populate('thumbnailImage')
       .populate('bannerImage')
+      .populate('eventImages')
       .populate('presentedBy')
       .populate('inAssociationWith')
       .populate('sponsors')
