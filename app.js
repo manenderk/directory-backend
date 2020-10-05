@@ -74,7 +74,7 @@ app.use('/menu-item-reviews', MenuItemReviewRouter)
 app.use('/dropdown', DropdownRouter)
 app.use('/media', MediaRouter)
 app.use('/home-slider', HomeSliderRouter)
-app.use('/person', PersonRouter)
+app.use('/contact-person', PersonRouter)
 app.use('/pricing-package', PricingPackageRouter)
 app.use('/event', EventRouter)
 // #endregion

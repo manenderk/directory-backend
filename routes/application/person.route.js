@@ -4,7 +4,7 @@ const Person = require('@models/application/person.model')
 
 router.get('/', async (req, res, next) => {
   try {
-    const persons = await Person.find()
+    const persons = await Person.find().populate('image')
     res.status(200).json(persons)
   } catch (e) {
     res.status(500).json(e)
@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const person = await Person.findById(req.params.id)
+    const person = await Person.findById(req.params.id).populate('image')
     res.status(200).json(person)
   } catch (error) {
     res.status(500).json(error)
@@ -22,13 +22,14 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const person = new Person({
+    let person = new Person({
       image: req.body.image,
       name: req.body.name,
       phone: req.body.phone,
       email: req.body.email
     })
     await person.save()
+    person = await Person.findById(person._id).populate('image')
     res.status(201).json(person)
   } catch (e) {
     res.status(500).json(e)
@@ -44,11 +45,11 @@ router.put('/:id', async (req, res, next) => {
       phone: req.body.phone,
       email: req.body.email
     })
-    person = await Person.findByIdAndUpdate(
+    await Person.findByIdAndUpdate(
       req.params.id,
-      person,
-      { new: true	}
+      person
     )
+    person = await Person.findById(person._id).populate('image')
     res.status(200).json(person)
   } catch (e) {
     res.status(500).json(e)
