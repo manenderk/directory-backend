@@ -13,7 +13,12 @@ router.get('/', async (req, res, next) => {
       .populate('inAssociationWith')
       .populate('sponsors')
       .populate('pricings')
-      .populate('contacts')
+      .populate({
+        path: 'contacts',
+        populate: {
+          path: 'image'
+        }
+      })
     res.status(200).json(documents)
   } catch (e) {
     res.status(500).json(e)
@@ -31,7 +36,12 @@ router.get('/id/:id', async (req, res, next) => {
       .populate('inAssociationWith')
       .populate('sponsors')
       .populate('pricings')
-      .populate('contacts')
+      .populate({
+        path: 'contacts',
+        populate: {
+          path: 'image'
+        }
+      })
     res.status(200).json(event)
   } catch (e) {
     res.status(500).json(e)
@@ -85,7 +95,12 @@ router.post('/', async (req, res, next) => {
       .populate('inAssociationWith')
       .populate('sponsors')
       .populate('pricings')
-      .populate('contacts')
+      .populate({
+        path: 'contacts',
+        populate: {
+          path: 'image'
+        }
+      })
     res.status(201).json(event)
   } catch (e) {
     res.status(500).json(e)
@@ -128,7 +143,12 @@ router.put('/:id', async (req, res, next) => {
       .populate('inAssociationWith')
       .populate('sponsors')
       .populate('pricings')
-      .populate('contacts')
+      .populate({
+        path: 'contacts',
+        populate: {
+          path: 'image'
+        }
+      })
     res.status(200).json(event)
   } catch (e) {
     res.status(500).json(e)
