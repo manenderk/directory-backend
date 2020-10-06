@@ -34,6 +34,17 @@ router.get('/list', async (req, res, next) => {
   }
 })
 
+router.get('/featured', async (req, res, next) => {
+  try {
+    const documents = await Event.find().sort(
+      { featured: -1, order: 1, createdAt: -1 }
+    ).populate('thumbnailImage')
+    res.status(200).json(documents)
+  } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
 // GET SINGLE EVENT
 router.get('/id/:id', async (req, res, next) => {
   try {
@@ -79,6 +90,7 @@ router.post('/', async (req, res, next) => {
       date: req.body.date,
       time: req.body.time,
       location: req.body.location,
+      priceRange: req.body.priceRange,
       thumbnailImage: req.body.thumbnailImage,
       bannerImage: req.body.bannerImage,
       description: req.body.description,
@@ -125,6 +137,7 @@ router.put('/:id', async (req, res, next) => {
       date: req.body.date,
       time: req.body.time,
       location: req.body.location,
+      priceRange: req.body.priceRange,
       thumbnailImage: req.body.thumbnailImage,
       bannerImage: req.body.bannerImage,
       description: req.body.description,
