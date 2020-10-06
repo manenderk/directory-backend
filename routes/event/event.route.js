@@ -25,6 +25,15 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.get('/list', async (req, res, next) => {
+  try {
+    const documents = await Event.find().sort({ createdAt: -1 })
+    res.status(200).json(documents)
+  } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
 // GET SINGLE EVENT
 router.get('/id/:id', async (req, res, next) => {
   try {
