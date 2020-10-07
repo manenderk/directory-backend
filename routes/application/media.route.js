@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Media = require('@models/application/media.model')
 const config = require('@root/config')
-const base64Img = require('base64-img')
+const base64Img = require('@utils/img-base-64')
 const path = require('path')
 const uploader = require('@root/utils/file-uploader')(config.uploadDirectory, 'file')
 

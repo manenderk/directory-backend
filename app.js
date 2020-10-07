@@ -27,6 +27,7 @@ const HomeSliderRouter = require('@routes/application/home-slider.route')
 const PersonRouter = require('@routes/application/person.route')
 const PricingPackageRouter = require('@routes/application/pricing-package.route')
 const EventRouter = require('@routes/event/event.route')
+const NewsRouter = require('@routes/news/news.route')
 // #endregion
 
 // #region Express Configuration
@@ -77,6 +78,7 @@ app.use('/home-slider', HomeSliderRouter)
 app.use('/contact-person', PersonRouter)
 app.use('/pricing-package', PricingPackageRouter)
 app.use('/event', EventRouter)
+app.use('/news', NewsRouter)
 // #endregion
 
 module.exports = app

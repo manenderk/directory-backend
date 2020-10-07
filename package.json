@@ -13,10 +13,11 @@
     "@routes": "./routes",
     "@public": "./public",
     "@helpers": "./helpers",
+    "@utils": "./utils",
     "@root": "."
   },
   "dependencies": {
-    "base64-img": "^1.0.4",
+    "axios": "^0.20.0",
     "bcrypt": "^5.0.0",
     "compression": "^1.7.4",
     "cookie-parser": "~1.4.4",
