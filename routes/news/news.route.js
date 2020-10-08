@@ -4,7 +4,7 @@ const News = require('@models/news/news.model')
 
 router.get('/', async (req, res, next) => {
   try {
-    const news = await News.find().select('-body').sort({ createdAt: -1 }).populate('thumbnailImage')
+    const news = await News.find().select('-body').sort({ createdAt: -1 })
     res.status(200).json(news)
   } catch (error) {
     res.status(500).json(error)
