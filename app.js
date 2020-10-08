@@ -28,6 +28,7 @@ const PersonRouter = require('@routes/application/person.route')
 const PricingPackageRouter = require('@routes/application/pricing-package.route')
 const EventRouter = require('@routes/event/event.route')
 const NewsRouter = require('@routes/news/news.route')
+const FileRouter = require('@routes/application/file.route')
 // #endregion
 
 // #region Express Configuration
@@ -79,6 +80,7 @@ app.use('/contact-person', PersonRouter)
 app.use('/pricing-package', PricingPackageRouter)
 app.use('/event', EventRouter)
 app.use('/news', NewsRouter)
+app.use('/file', FileRouter)
 // #endregion
 
 module.exports = app

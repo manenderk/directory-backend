@@ -4,7 +4,7 @@ const News = require('@models/news/news.model')
 
 router.get('/', async (req, res, next) => {
   try {
-    const news = News.find().populate('bannerImage').populate('thumbnailImage')
+    const news = await News.find().select('-body').sort({ createdAt: -1 }).populate('thumbnailImage')
     res.status(200).json(news)
   } catch (error) {
     res.status(500).json(error)
@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/id/:id', async (req, res, next) => {
   try {
-    const news = News.findById(req.params.id).populate('bannerImage').populate('thumbnailImage')
+    const news = await News.findById(req.params.id).populate('bannerImage').populate('thumbnailImage')
     res.status(200).json(news)
   } catch (error) {
     res.status(500).json(error)
@@ -45,7 +45,7 @@ router.post('/', async (req, res, next) => {
       order: req.body.order
     })
     await news.save()
-    news = News.findById(news._id).populate('bannerImage').populate('thumbnailImage')
+    news = await News.findById(news._id).populate('bannerImage').populate('thumbnailImage')
     res.status(201).json(news)
   } catch (error) {
     res.status(500).json(error)
@@ -65,7 +65,7 @@ router.put('/id/:id', async (req, res, next) => {
       order: req.body.order
     })
     await News.findByIdAndUpdate(req.params.id, news)
-    news = News.findById(news._id).populate('bannerImage').populate('thumbnailImage')
+    news = await News.findById(news._id).populate('bannerImage').populate('thumbnailImage')
     res.status(200).json(news)
   } catch (error) {
     res.status(500).json(error)
