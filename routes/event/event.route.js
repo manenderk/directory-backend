@@ -104,7 +104,8 @@ router.post('/', async (req, res, next) => {
       sponsors: req.body.sponsors,
       pricings: req.body.pricings,
       ticketsLocations: req.body.ticketsLocations,
-      contacts: req.body.contacts
+      contacts: req.body.contacts,
+      latLng: req.body.latLng
     })
 
     await event.save()
@@ -151,7 +152,8 @@ router.put('/:id', async (req, res, next) => {
       sponsors: req.body.sponsors,
       pricings: req.body.pricings,
       ticketsLocations: req.body.ticketsLocations,
-      contacts: req.body.contacts
+      contacts: req.body.contacts,
+      latLng: req.body.latLng
     })
     await Event.findByIdAndUpdate(
       req.params.id,

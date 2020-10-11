@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+// eslint-disable-next-line no-unused-vars
+const GeoJSON = require('mongoose-geojson-schema')
 
 const EventSchema = new mongoose.Schema(
   {
@@ -50,7 +52,10 @@ const EventSchema = new mongoose.Schema(
     contacts: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Person'
-    }]
+    }],
+    latLng: {
+      type: mongoose.Schema.Types.Point
+    }
   }, {
     timestamps: true
   }
