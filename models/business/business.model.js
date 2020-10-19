@@ -1,58 +1,78 @@
 const mongoose = require('mongoose')
+// eslint-disable-next-line no-unused-vars
+const GeoJSON = require('mongoose-geojson-schema')
 
 const BusinessSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
   },
-  addressLine1: {
-    type: String,
-    required: true
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
   },
-  addressLine2: {
-    type: String
+  starRating: {
+    type: Number
   },
-  city: {
-    type: String
-  },
-  state: {
-    type: String
-  },
-  country: {
-    type: String
-  },
-  zipcode: {
-    type: String
-  },
-  contactNumber: {
-    type: String,
-    required: true
-  },
-  alternateContactNumber: {
+  owner: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Person'
+  }],
+  phone: {
     type: String
   },
   email: {
     type: String
   },
-  alternateEmail: {
+  latLng: {
+    type: mongoose.Schema.Types.Point
+  },
+  website: {
     type: String
   },
-  longitude: {
-    type: Number
-  },
-  langitude: {
-    type: Number
-  },
-  ownerNotes: {
+  address: {
     type: String
   },
-  startDate: {
-    type: Date
+  description: {
+    type: String
   },
-  owner: {
+  productsAndServices: {
+    type: [String]
+  },
+  productsAndServicesImages: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'Media'
+  }],
+  specialities: {
+    type: [String]
   },
+  languagesSpoken: {
+    type: [String]
+  },
+  openingHours: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'OpeningHours'
+  },
+  paymentMethods: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Media'
+  }],
+  team: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Person'
+  }],
+  thumbnailImage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Media'
+  },
+  bannerImage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Media'
+  },
+  images: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Media'
+  }],
   featured: {
     type: Boolean,
     default: false
