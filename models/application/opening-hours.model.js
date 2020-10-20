@@ -1,8 +1,7 @@
-const { Mongoose } = require('mongoose')
 const mongoose = require('mongoose')
 
-const openHourSchema = new Mongoose.Schema({
-  open: {
+const openHourSchema = new mongoose.Schema({
+  closed: {
     type: Boolean,
     default: false
   },

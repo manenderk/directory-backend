@@ -6,16 +6,17 @@ const Business = require('@models/business/business.model')
 router.get('/', async (req, res, next) => {
   try {
     const businesses = await Business.find()
-      .populate('OpeningHours')
-      .populate('thumbnailImage')
+      .populate('category')
     res.status(200).json(businesses)
   } catch (e) {
     res.status(500).json(e)
   }
 })
 
+router.get('')
+
 // GET SINGLE BUSINESS TYPE
-router.get('/:id', async (req, res, next) => {
+router.get('/id/:id', async (req, res, next) => {
   try {
     const business = await getBusiness(req.params.id)
     res.status(200).json(business)
@@ -29,7 +30,7 @@ router.post('/', async (req, res, next) => {
   try {
     let business = getBusinessModelFromReqObject(req)
     await business.save()
-    business = getBusiness(business._id)
+    business = await getBusiness(business._id)
     res.status(201).json(business)
   } catch (e) {
     res.status(500).json(e)
@@ -45,7 +46,7 @@ router.put('/:id', async (req, res, next) => {
       business,
       { new: true }
     )
-    business = getBusiness(business._id)
+    business = await getBusiness(business._id)
     res.status(200).json(business)
   } catch (e) {
     res.status(500).json(e)

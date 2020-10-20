@@ -24,6 +24,7 @@ const PricingPackageRouter = require('@routes/application/pricing-package.route'
 const EventRouter = require('@routes/event/event.route')
 const NewsRouter = require('@routes/news/news.route')
 const FileRouter = require('@routes/application/file.route')
+const OpeningHourRouter = require('@routes/application/opening-hours.route.js')
 // #endregion
 
 // #region Express Configuration
@@ -62,7 +63,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/theDirectoryDb')
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/category', CategoryRouter)
-app.use('/businesses', BusinessRouter)
+app.use('/business', BusinessRouter)
 app.use('/dropdown', DropdownRouter)
 app.use('/media', MediaRouter)
 app.use('/home-slider', HomeSliderRouter)
@@ -71,6 +72,7 @@ app.use('/pricing-package', PricingPackageRouter)
 app.use('/event', EventRouter)
 app.use('/news', NewsRouter)
 app.use('/file', FileRouter)
+app.use('/opening-hours', OpeningHourRouter)
 // #endregion
 
 module.exports = app
