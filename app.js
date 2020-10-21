@@ -25,6 +25,7 @@ const EventRouter = require('@routes/event/event.route')
 const NewsRouter = require('@routes/news/news.route')
 const FileRouter = require('@routes/application/file.route')
 const OpeningHourRouter = require('@routes/application/opening-hours.route.js')
+const UtilRouter = require('@routes/application/util.route.js')
 // #endregion
 
 // #region Express Configuration
@@ -73,6 +74,7 @@ app.use('/event', EventRouter)
 app.use('/news', NewsRouter)
 app.use('/file', FileRouter)
 app.use('/opening-hours', OpeningHourRouter)
+app.use('/util', UtilRouter)
 // #endregion
 
 module.exports = app

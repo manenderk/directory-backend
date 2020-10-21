@@ -1,5 +1,6 @@
 const express = require('express')
 const Category = require('@models/category/category.model')
+const GetNumber = require('@utils/get-number')
 const router = express.Router()
 
 // GET ALL categories
@@ -39,8 +40,10 @@ router.get('/frontend', async (req, res, next) => {
 // ADD Category
 router.post('/', async (req, res, next) => {
   try {
+    const number = await GetNumber(Category)
     let category = new Category({
       name: req.body.name,
+      number: number,
       image: req.body.image,
       parentCategory: req.body.parentCategory,
       description: req.body.description,
@@ -63,6 +66,7 @@ router.put('/:id', async (req, res, next) => {
     let category = new Category({
       _id: req.params.id,
       name: req.body.name,
+      number: req.body.number,
       image: req.body.image,
       parentCategory: req.body.parentCategory,
       description: req.body.description,

@@ -13,7 +13,42 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('')
+router.get('/frontend', async (req, res, next) => {
+  try {
+    const filters = {}
+    filters.active = true
+    if (req.query.categoryId && req.query.categoryId !== 'null') {
+      filters.category = req.query.categoryId
+    }
+    if (req.query.name && req.query.name !== 'null') {
+      filters.name = { $regex: new RegExp(req.query.name, 'i') }
+    }
+    if (req.query.featured && req.query.featured !== 'null') {
+      filters.featured = true
+    }
+    if (req.query.locationCoordinates && req.query.locationCoordinates !== 'null') {
+      const coordinates = JSON.parse(req.query.locationCoordinates)
+      console.log(coordinates.lat, coordinates.lng)
+    }
+
+    const sort = {}
+    if (req.query.sortBy === 'distance') {
+      sort.distance = 1
+    } else if (req.query.sortBy === 'name') {
+      sort.name = 1
+    } else if (req.query.sortBy === 'rating') {
+      sort.starRating = -1
+    }
+
+    const businesses = await Business.find(filters).sort(sort)
+      .populate('thumbnailImage')
+      .populate('openingHours')
+
+    res.status(200).json(businesses)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
 
 // GET SINGLE BUSINESS TYPE
 router.get('/id/:id', async (req, res, next) => {
