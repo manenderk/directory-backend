@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const xlsx = require('xlsx')
+const config = require('@root/config')
+const csvjson = require('csvjson')
 const fs = require('fs')
 const Category = require('@models/category/category.model')
 const GetNumber = require('@utils/get-number')
@@ -21,35 +22,35 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/export/:collection', async (req, res, next) => {
+router.get('/single', async (req, res, next) => {
   try {
-    let records
-    if (req.params.collection === 'category') {
-      records = await Category.find().sort('number')
-    }
-    var newWB = xlsx.book_new()
-    var newWS = xlsx.utils.json_to_sheet(records)
-    xlsx.utils.book_append_sheet(newWB, newWS, req.params.collection)
-    const filePath = '/files'
-    const fileName = Date.now + req.params.fileName
-    const completeFilePath = 'public' + filePath
-    console.log(completeFilePath)
-    if (!fs.existsSync(completeFilePath)) {
-      fs.mkdirSync(completeFilePath)
-    }
-    xlsx.writeFile(newWB, completeFilePath + '/' + fileName)
-    res.status(200).json({
-      file: filePath + '/' + fileName
-    })
+    const number = await GetNumber(Category)
+    res.status(200).json(number)
   } catch (error) {
     res.status(500).json(error)
   }
 })
 
-router.get('/single', async (req, res, next) => {
+router.get('/export/:entity', async (req, res, next) => {
   try {
-    const number = await GetNumber(Category)
-    res.status(200).json(number)
+    let records = null
+    const entity = req.params.entity
+
+    if (entity === 'categories') {
+      records = await Category.find().sort('number')
+    }
+
+    const csvData = csvjson.toCSV(JSON.stringify(records), {
+      headers: 'key'
+    })
+    const fileName = entity + Date.now() + '.csv'
+    const uploadPath = config.exportFilesDirectory + '/' + fileName
+    const fullPath = 'public' + uploadPath
+    fs.writeFileSync(fullPath, csvData)
+    const obj = {
+      file: uploadPath
+    }
+    res.status(200).json(obj)
   } catch (error) {
     res.status(500).json(error)
   }

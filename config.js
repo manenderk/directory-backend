@@ -1,13 +1,7 @@
 const config = {
   projectRoot: __dirname,
   uploadDirectory: '/uploads',
-  uploadDirectories: {
-    category: '/uploads/category',
-    businessType: '/uploads/business-types',
-    businessImage: '/uploads/business-image',
-    menuCategories: '/uploads/menu-categories',
-    menuItems: '/uploads/menu-items'
-  },
+  exportFilesDirectory: '/files',
   auth: {
     bcryptIterations: 10,
     issuer: 'TheDirectory',
