@@ -6,7 +6,7 @@ const Business = require('@models/business/business.model')
 router.get('/', async (req, res, next) => {
   try {
     const businesses = await Business.find()
-      .populate('category')
+      .populate('category').sort('-createdAt')
     res.status(200).json(businesses)
   } catch (e) {
     res.status(500).json(e)
@@ -91,11 +91,21 @@ router.put('/:id', async (req, res, next) => {
 async function getBusiness (id) {
   const business = await Business.findById(id)
     .populate('category')
-    .populate('owner')
+    .populate({
+      path: 'owner',
+      populate: {
+        path: 'image'
+      }
+    })
     .populate('productsAndServicesImages')
     .populate('openingHours')
     .populate('paymentMethods')
-    .populate('team')
+    .populate({
+      path: 'team',
+      populate: {
+        path: 'image'
+      }
+    })
     .populate('thumbnailImage')
     .populate('bannerImage')
     .populate('images')
@@ -107,7 +117,7 @@ function getBusinessModelFromReqObject (req, id = null) {
     name: req.body.name,
     category: req.body.category,
     starRating: req.body.starRating,
-    person: req.body.person,
+    owner: req.body.owner,
     phone: req.body.phone,
     email: req.body.email,
     latLng: req.body.latLng,
@@ -115,6 +125,7 @@ function getBusinessModelFromReqObject (req, id = null) {
     address: req.body.address,
     description: req.body.description,
     productsAndServices: req.body.productsAndServices,
+    productsAndServicesImages: req.body.productsAndServicesImages,
     specialities: req.body.specialities,
     languagesSpoken: req.body.languagesSpoken,
     openingHours: req.body.openingHours,
