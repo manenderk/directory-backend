@@ -2,10 +2,13 @@ const express = require('express')
 const router = express.Router()
 const BusinessReview = require('@models/business/business-review.model')
 
-router.get('/business-id/:itemId', async (req, res, next) => {
+router.get('/business-id/:id', async (req, res, next) => {
   try {
     const reviews = await BusinessReview.find({
-      businessId: req.params.itemId
+      businessId: req.params.id,
+      active: true
+    }).sort({
+      featured: -1, createdAt: -1
     })
     res.status(200).json(reviews)
   } catch (e) {
@@ -13,20 +16,16 @@ router.get('/business-id/:itemId', async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/review-id/:id', async (req, res, next) => {
   try {
     const review = await BusinessReview.findById(req.params.id)
-    if (!review) {
-      res.sendStatus(404)
-    } else {
-      res.status(200).json(review)
-    }
+    res.status(200).json(review)
   } catch (e) {
     res.status(500).json(e)
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/add-review', async (req, res, next) => {
   try {
     const review = new BusinessReview({
       businessId: req.body.businessId,

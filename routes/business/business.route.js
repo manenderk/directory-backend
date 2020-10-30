@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Business = require('@models/business/business.model')
+const BusinessReview = require('@models/business/business-review.model')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
@@ -44,7 +45,16 @@ router.get('/frontend', async (req, res, next) => {
       .populate('thumbnailImage')
       .populate('openingHours')
 
-    res.status(200).json(businesses)
+    const businessesResponse = []
+
+    await Promise.all(
+      businesses.map(async business => {
+        const bObj = business.toObject()
+        bObj.reviewCount = await getBusinessReviewsCounts(bObj._id)
+        businessesResponse.push(bObj)
+      })
+    )
+    res.status(200).json(businessesResponse)
   } catch (error) {
     res.status(500).json(error)
   }
@@ -53,7 +63,10 @@ router.get('/frontend', async (req, res, next) => {
 // GET SINGLE BUSINESS TYPE
 router.get('/id/:id', async (req, res, next) => {
   try {
-    const business = await getBusiness(req.params.id)
+    let business = await getBusiness(req.params.id)
+    const reviewCount = await getBusinessReviewsCounts(business._id)
+    business = business.toObject()
+    business.reviewCount = reviewCount
     res.status(200).json(business)
   } catch (e) {
     res.status(500).json(e)
@@ -141,6 +154,18 @@ function getBusinessModelFromReqObject (req, id = null) {
     business._id = id
   }
   return business
+}
+
+async function getBusinessReviewsCounts (businessId) {
+  if (!businessId) {
+    return null
+  }
+
+  const reviewCount = await BusinessReview.find({
+    businessId: businessId,
+    active: true
+  }).countDocuments()
+  return reviewCount || 0
 }
 
 module.exports = router

@@ -15,8 +15,7 @@ const BusinessReviewSchema = new mongoose.Schema({
   },
   ratedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
   },
   active: {
     type: Boolean,
