@@ -12,9 +12,6 @@ const BusinessSchema = new mongoose.Schema({
     ref: 'Category',
     required: true
   },
-  starRating: {
-    type: Number
-  },
   owner: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Person'
