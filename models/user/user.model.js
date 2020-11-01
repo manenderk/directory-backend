@@ -17,12 +17,11 @@ const UserSchema = new mongoose.Schema({
     type: String
   },
   lastName: {
-    type: String,
-    required: true
+    type: String
   },
   active: {
     type: Boolean,
-    default: true
+    default: false
   }
 }, {
   timestamps: true

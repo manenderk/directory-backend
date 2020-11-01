@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const { v4: uuidv4 } = require('uuid')
 const BusinessReview = require('@models/business/business-review.model')
+const User = require('@models/user/user.model')
 
 router.get('/business-id/:id', async (req, res, next) => {
   try {
@@ -27,11 +29,42 @@ router.get('/review-id/:id', async (req, res, next) => {
 
 router.post('/add-review', async (req, res, next) => {
   try {
+    let ratedBy = req.body.ratedBy
+    if (!ratedBy) {
+      const firstName = req.body.firstName
+      const lastName = req.body.lastName
+      let email = req.body.email
+      if (!firstName || !email) {
+        res.status(400).json({
+          error: 'Insufficient Inputs'
+        })
+        return
+      }
+
+      email = email.toLowerCase()
+
+      let user = await User.findOne({
+        email: email
+      })
+      if (!user || !user._id) {
+        user = new User({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: uuidv4(),
+          active: true
+        })
+        await user.save()
+      }
+      ratedBy = user._id
+    }
+
     const review = new BusinessReview({
       businessId: req.body.businessId,
       rating: req.body.rating,
+      title: req.body.title,
       comment: req.body.comment,
-      ratedBy: req.body.ratedBy,
+      ratedBy: ratedBy,
       active: req.body.active,
       featured: req.body.featured
     })
@@ -49,6 +82,7 @@ router.put('/:id', async (req, res, next) => {
       {
         businessId: req.body.businessId,
         rating: req.body.rating,
+        title: req.body.title,
         comment: req.body.comment,
         ratedBy: req.body.ratedBy,
         active: req.body.active,

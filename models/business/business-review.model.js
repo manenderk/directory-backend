@@ -10,6 +10,9 @@ const BusinessReviewSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  title: {
+    type: String
+  },
   comment: {
     type: String
   },
@@ -19,7 +22,7 @@ const BusinessReviewSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: true
+    default: false
   },
   featured: {
     type: Boolean,

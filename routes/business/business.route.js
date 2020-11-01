@@ -161,6 +161,18 @@ async function getBusinessReviewsCounts (businessId) {
     return null
   }
 
+  /* const data = await BusinessReview.aggregate([
+    {
+      $group: {
+        _id: "$ebusinessId",
+        data: { $push: "$$ROOT" },
+        count: { $sum: 1 }
+      }
+    }
+  ])
+
+  console.log(data) */
+
   const reviewCount = await BusinessReview.find({
     businessId: businessId,
     active: true
