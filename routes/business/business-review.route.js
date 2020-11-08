@@ -4,6 +4,26 @@ const { v4: uuidv4 } = require('uuid')
 const BusinessReview = require('@models/business/business-review.model')
 const User = require('@models/user/user.model')
 
+router.get('/all', async (req, res, next) => {
+  try {
+    const reviews = await BusinessReview.find().populate('businessId', 'name')
+    res.status(200).json(reviews)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
+
+router.get('/pending-reviews', async (req, res, next) => {
+  try {
+    const reviews = await BusinessReview.find({
+      active: false
+    }).populate('business').sort('-createdAt')
+    res.status(200).json(reviews)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
+
 router.get('/business-id/:id', async (req, res, next) => {
   try {
     const reviews = await BusinessReview.find({
@@ -75,7 +95,7 @@ router.post('/add-review', async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/update-review/:id', async (req, res, next) => {
   try {
     const updatedReview = BusinessReview.findByIdAndUpdate(
       req.params.id,
@@ -95,6 +115,19 @@ router.put('/:id', async (req, res, next) => {
     res.status(200).json(updatedReview)
   } catch (e) {
     res.status(500).json(e)
+  }
+})
+
+router.put('/moderate-review/:id', async (req, res, next) => {
+  try {
+    await BusinessReview.findByIdAndUpdate(req.params.id, {
+      active: req.body.active
+    })
+    res.status(200).json({
+      status: 'success'
+    })
+  } catch (error) {
+    res.status(500).json(error)
   }
 })
 

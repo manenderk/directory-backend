@@ -61,4 +61,6 @@ const EventSchema = new mongoose.Schema(
   }
 )
 
+EventSchema.index({ latLng: '2dsphere' })
+
 module.exports = mongoose.model('Event', EventSchema)
