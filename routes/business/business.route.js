@@ -3,6 +3,73 @@ const router = express.Router()
 const Business = require('@models/business/business.model')
 const BusinessReview = require('@models/business/business-review.model')
 
+const commonAggregations = {
+  lookupBusinessReview: {
+    $lookup: {
+      from: 'businessreviews',
+      localField: '_id',
+      foreignField: 'businessId',
+      as: 'reviews'
+    }
+  },
+  unwindBusinessReview: {
+    $unwind: {
+      path: '$reviews',
+      preserveNullAndEmptyArrays: true
+    }
+  },
+  groupBusinessReview: {
+    $group: {
+      _id: '$_id',
+      name: {
+        $first: '$name'
+      },
+      address: {
+        $first: '$address'
+      },
+      thumbnailMediaId: {
+        $first: '$thumbnailImage'
+      },
+      website: {
+        $first: '$website'
+      },
+      phone: {
+        $first: '$phone'
+      },
+      email: {
+        $first: '$email'
+      },
+      latLng: {
+        $first: '$latLng'
+      },
+      averageRating: {
+        $avg: '$reviews.rating'
+      },
+      reviewCount: {
+        $sum: 1
+      },
+      distance: {
+        $first: '$distance'
+      }
+    }
+  },
+  lookupThumbnail: {
+    $lookup: {
+      from: 'media',
+      localField: 'thumbnailMediaId',
+      foreignField: '_id',
+      as: 'thumbnailImage'
+    }
+  },
+  unwindThumbnail: {
+    $unwind: {
+      path: '$thumbnailImage',
+      preserveNullAndEmptyArrays: true
+    }
+  }
+
+}
+
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
   try {
@@ -10,6 +77,132 @@ router.get('/', async (req, res, next) => {
       .populate('category').sort('-createdAt')
     res.status(200).json(businesses)
   } catch (e) {
+    res.status(500).json(e)
+  }
+})
+
+router.get('/frontend-listing', async (req, res, next) => {
+  try {
+    const filters = {}
+    filters.active = true
+    if (req.query.categoryId && req.query.categoryId !== 'null') {
+      filters.category = req.query.categoryId
+    }
+    if (req.query.name && req.query.name !== 'null') {
+      filters.name = {
+        $regex: new RegExp(req.query.name, 'i')
+      }
+    }
+    if (req.query.featured && req.query.featured !== 'null') {
+      filters.featured = true
+    }
+    if (req.query.locationCoordinates && req.query.locationCoordinates !== 'null') {
+      const coordinates = JSON.parse(req.query.locationCoordinates)
+      console.log(coordinates.lat, coordinates.lng)
+    }
+
+    let sort = {}
+    if (req.query.sortBy === 'distance') {
+      sort.distance = 1
+    } else if (req.query.sortBy === 'name') {
+      sort = {
+        'business.name': 1
+      }
+    } else if (req.query.sortBy === 'rating') {
+      // eslint-disable-next-line quote-props
+      sort = {
+        averageRating: -1
+      }
+    } else {
+      sort = {
+        'business.name': 1
+      }
+    }
+
+    const distanceFilters = {
+      lat: parseFloat(req.query.lat),
+      lng: parseFloat(req.query.lng),
+      distance: parseFloat(req.query.distance)
+    }
+
+    const data = await Business.aggregate([
+      [{
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [distanceFilters.lat, distanceFilters.lng]
+          },
+          distanceField: 'distance',
+          query: filters,
+          maxDistance: distanceFilters.distance,
+          spherical: true
+        }
+      }, {
+        $lookup: {
+          from: 'businessreviews',
+          localField: '_id',
+          foreignField: 'businessId',
+          as: 'reviews'
+        }
+      }, {
+        $unwind: {
+          path: '$reviews',
+          preserveNullAndEmptyArrays: true
+        }
+      }, {
+        $group: {
+          _id: '$_id',
+          name: {
+            $first: '$name'
+          },
+          address: {
+            $first: '$address'
+          },
+          thumbnailMediaId: {
+            $first: '$thumbnailImage'
+          },
+          website: {
+            $first: '$website'
+          },
+          phone: {
+            $first: '$phone'
+          },
+          email: {
+            $first: '$email'
+          },
+          latLng: {
+            $first: '$latLng'
+          },
+          averageRating: {
+            $avg: '$reviews.rating'
+          },
+          reviewCount: {
+            $sum: 1
+          },
+          distance: {
+            $first: '$distance'
+          }
+        }
+      }, {
+        $lookup: {
+          from: 'media',
+          localField: 'thumbnailMediaId',
+          foreignField: '_id',
+          as: 'thumbnailImage'
+        }
+      }, {
+        $unwind: {
+          path: '$thumbnailImage',
+          preserveNullAndEmptyArrays: true
+        }
+      }, {
+        $sort: sort
+      }]
+    ])
+    res.status(200).json(data)
+  } catch (e) {
+    console.log('Error')
+    console.log(e)
     res.status(500).json(e)
   }
 })
@@ -22,7 +215,9 @@ router.get('/frontend', async (req, res, next) => {
       filters.category = req.query.categoryId
     }
     if (req.query.name && req.query.name !== 'null') {
-      filters.name = { $regex: new RegExp(req.query.name, 'i') }
+      filters.name = {
+        $regex: new RegExp(req.query.name, 'i')
+      }
     }
     if (req.query.featured && req.query.featured !== 'null') {
       filters.featured = true
@@ -91,8 +286,9 @@ router.put('/:id', async (req, res, next) => {
     let business = getBusinessModelFromReqObject(req, req.params.id)
     business = await Business.findByIdAndUpdate(
       req.params.id,
-      business,
-      { new: true }
+      business, {
+        new: true
+      }
     )
     business = await getBusiness(business._id)
     res.status(200).json(business)
@@ -156,22 +352,10 @@ function getBusinessModelFromReqObject (req, id = null) {
   return business
 }
 
-async function getBusinessReviewsCounts (businessId) {
+async function getReviewData (businessId) {
   if (!businessId) {
     return null
   }
-
-  /* const data = await BusinessReview.aggregate([
-    {
-      $group: {
-        _id: "$ebusinessId",
-        data: { $push: "$$ROOT" },
-        count: { $sum: 1 }
-      }
-    }
-  ])
-
-  console.log(data) */
 
   const reviewCount = await BusinessReview.find({
     businessId: businessId,

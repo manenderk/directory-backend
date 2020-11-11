@@ -1,0 +1,6 @@
+node_modules
+public/files
+public/images
+public/uploads
+.eslintrc.json
+.vscode
