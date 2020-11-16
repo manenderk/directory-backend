@@ -2,73 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Business = require('@models/business/business.model')
 const BusinessReview = require('@models/business/business-review.model')
-
-const commonAggregations = {
-  lookupBusinessReview: {
-    $lookup: {
-      from: 'businessreviews',
-      localField: '_id',
-      foreignField: 'businessId',
-      as: 'reviews'
-    }
-  },
-  unwindBusinessReview: {
-    $unwind: {
-      path: '$reviews',
-      preserveNullAndEmptyArrays: true
-    }
-  },
-  groupBusinessReview: {
-    $group: {
-      _id: '$_id',
-      name: {
-        $first: '$name'
-      },
-      address: {
-        $first: '$address'
-      },
-      thumbnailMediaId: {
-        $first: '$thumbnailImage'
-      },
-      website: {
-        $first: '$website'
-      },
-      phone: {
-        $first: '$phone'
-      },
-      email: {
-        $first: '$email'
-      },
-      latLng: {
-        $first: '$latLng'
-      },
-      averageRating: {
-        $avg: '$reviews.rating'
-      },
-      reviewCount: {
-        $sum: 1
-      },
-      distance: {
-        $first: '$distance'
-      }
-    }
-  },
-  lookupThumbnail: {
-    $lookup: {
-      from: 'media',
-      localField: 'thumbnailMediaId',
-      foreignField: '_id',
-      as: 'thumbnailImage'
-    }
-  },
-  unwindThumbnail: {
-    $unwind: {
-      path: '$thumbnailImage',
-      preserveNullAndEmptyArrays: true
-    }
-  }
-
-}
+const Mongoose = require('mongoose')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
@@ -96,109 +30,183 @@ router.get('/frontend-listing', async (req, res, next) => {
     if (req.query.featured && req.query.featured !== 'null') {
       filters.featured = true
     }
-    if (req.query.locationCoordinates && req.query.locationCoordinates !== 'null') {
-      const coordinates = JSON.parse(req.query.locationCoordinates)
-      console.log(coordinates.lat, coordinates.lng)
+
+    let distanceFilters = null
+
+    if (req.query.lat && req.query.lng && req.query.distance) {
+      distanceFilters = {
+        lat: parseFloat(req.query.lat),
+        lng: parseFloat(req.query.lng),
+        distance: parseFloat(req.query.distance)
+      }
     }
 
     let sort = {}
     if (req.query.sortBy === 'distance') {
       sort.distance = 1
     } else if (req.query.sortBy === 'name') {
-      sort = {
+      sort.name = 1
+      /* sort = {
         'business.name': 1
-      }
+      } */
     } else if (req.query.sortBy === 'rating') {
+      sort.averageRating = -1
       // eslint-disable-next-line quote-props
       sort = {
         averageRating: -1
       }
     } else {
-      sort = {
+      sort.name = 1
+      /* sort = {
         'business.name': 1
-      }
+      } */
     }
 
-    const distanceFilters = {
-      lat: parseFloat(req.query.lat),
-      lng: parseFloat(req.query.lng),
-      distance: parseFloat(req.query.distance)
-    }
+    let data = []
 
-    const data = await Business.aggregate([
-      [{
-        $geoNear: {
-          near: {
-            type: 'Point',
-            coordinates: [distanceFilters.lat, distanceFilters.lng]
-          },
-          distanceField: 'distance',
-          query: filters,
-          maxDistance: distanceFilters.distance,
-          spherical: true
-        }
-      }, {
-        $lookup: {
-          from: 'businessreviews',
-          localField: '_id',
-          foreignField: 'businessId',
-          as: 'reviews'
-        }
-      }, {
-        $unwind: {
-          path: '$reviews',
-          preserveNullAndEmptyArrays: true
-        }
-      }, {
-        $group: {
-          _id: '$_id',
-          name: {
-            $first: '$name'
-          },
-          address: {
-            $first: '$address'
-          },
-          thumbnailMediaId: {
-            $first: '$thumbnailImage'
-          },
-          website: {
-            $first: '$website'
-          },
-          phone: {
-            $first: '$phone'
-          },
-          email: {
-            $first: '$email'
-          },
-          latLng: {
-            $first: '$latLng'
-          },
-          averageRating: {
-            $avg: '$reviews.rating'
-          },
-          reviewCount: {
-            $sum: 1
-          },
-          distance: {
-            $first: '$distance'
+    if (distanceFilters) {
+      data = await Business.aggregate([
+        [{
+          $geoNear: {
+            near: {
+              type: 'Point',
+              coordinates: [distanceFilters.lat, distanceFilters.lng]
+            },
+            distanceField: 'distance',
+            query: filters,
+            maxDistance: distanceFilters.distance,
+            spherical: true
           }
-        }
-      }, {
-        $lookup: {
-          from: 'media',
-          localField: 'thumbnailMediaId',
-          foreignField: '_id',
-          as: 'thumbnailImage'
-        }
-      }, {
-        $unwind: {
-          path: '$thumbnailImage',
-          preserveNullAndEmptyArrays: true
-        }
-      }, {
-        $sort: sort
-      }]
-    ])
+        }, {
+          $lookup: {
+            from: 'businessreviews',
+            localField: '_id',
+            foreignField: 'businessId',
+            as: 'reviews'
+          }
+        }, {
+          $unwind: {
+            path: '$reviews',
+            preserveNullAndEmptyArrays: true
+          }
+        }, {
+          $group: {
+            _id: '$_id',
+            name: {
+              $first: '$name'
+            },
+            address: {
+              $first: '$address'
+            },
+            thumbnailMediaId: {
+              $first: '$thumbnailImage'
+            },
+            website: {
+              $first: '$website'
+            },
+            phone: {
+              $first: '$phone'
+            },
+            email: {
+              $first: '$email'
+            },
+            latLng: {
+              $first: '$latLng'
+            },
+            averageRating: {
+              $avg: '$reviews.rating'
+            },
+            reviewCount: {
+              $sum: 1
+            },
+            distance: {
+              $first: '$distance'
+            }
+          }
+        }, {
+          $lookup: {
+            from: 'media',
+            localField: 'thumbnailMediaId',
+            foreignField: '_id',
+            as: 'thumbnailImage'
+          }
+        }, {
+          $unwind: {
+            path: '$thumbnailImage',
+            preserveNullAndEmptyArrays: true
+          }
+        }, {
+          $sort: sort
+        }]
+      ])
+    } else {
+      data = await Business.aggregate([
+        [{
+          $match: filters
+        }, {
+          $lookup: {
+            from: 'businessreviews',
+            localField: '_id',
+            foreignField: 'businessId',
+            as: 'reviews'
+          }
+        }, {
+          $unwind: {
+            path: '$reviews',
+            preserveNullAndEmptyArrays: true
+          }
+        }, {
+          $group: {
+            _id: '$_id',
+            name: {
+              $first: '$name'
+            },
+            address: {
+              $first: '$address'
+            },
+            thumbnailMediaId: {
+              $first: '$thumbnailImage'
+            },
+            website: {
+              $first: '$website'
+            },
+            phone: {
+              $first: '$phone'
+            },
+            email: {
+              $first: '$email'
+            },
+            latLng: {
+              $first: '$latLng'
+            },
+            averageRating: {
+              $avg: '$reviews.rating'
+            },
+            reviewCount: {
+              $sum: 1
+            },
+            distance: {
+              $first: '$distance'
+            }
+          }
+        }, {
+          $lookup: {
+            from: 'media',
+            localField: 'thumbnailMediaId',
+            foreignField: '_id',
+            as: 'thumbnailImage'
+          }
+        }, {
+          $unwind: {
+            path: '$thumbnailImage',
+            preserveNullAndEmptyArrays: true
+          }
+        }, {
+          $sort: sort
+        }]
+      ])
+    }
+
     res.status(200).json(data)
   } catch (e) {
     console.log('Error')
@@ -297,6 +305,11 @@ router.put('/:id', async (req, res, next) => {
   }
 })
 
+router.get('/test/:id', async (req, res, next) => {
+  const data = await getReviewData(req.params.id)
+  res.status(200).json(data)
+})
+
 async function getBusiness (id) {
   const business = await Business.findById(id)
     .populate('category')
@@ -357,11 +370,45 @@ async function getReviewData (businessId) {
     return null
   }
 
+  const reviewData = {
+    count: null,
+    averageRating: null
+  }
+
+  await Promise.all([
+    reviewData.count = await getReviewCount(businessId),
+    reviewData.averageRating = await getAvgRating(businessId)
+  ])
+
+  return reviewData
+}
+
+async function getReviewCount (businessId) {
   const reviewCount = await BusinessReview.find({
     businessId: businessId,
     active: true
   }).countDocuments()
   return reviewCount || 0
+}
+
+async function getAvgRating (businessId) {
+  const ratings = await BusinessReview.aggregate([
+    {
+      $match: {
+        businessId: Mongoose.Types.ObjectId(businessId),
+        active: true
+      }
+    }, {
+      $group: {
+        _id: '$businessId',
+        averageRating: {
+          $avg: '$rating'
+        }
+      }
+    }
+  ])
+
+  return ratings[0].averageRating || null
 }
 
 module.exports = router
