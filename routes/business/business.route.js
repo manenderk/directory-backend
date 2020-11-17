@@ -15,12 +15,25 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+/**
+ * filters query params::
+ * categoryId: string,
+ * name: string,
+ * featured: boolean,
+ * lat: number
+ * lng: number
+ * distance: number
+*/
+/**
+ * sort query paramss::
+ * sortBy: distance | name | rating
+ */
 router.get('/frontend-listing', async (req, res, next) => {
   try {
     const filters = {}
     filters.active = true
     if (req.query.categoryId && req.query.categoryId !== 'null') {
-      filters.category = req.query.categoryId
+      filters.category = Mongoose.Types.ObjectId(req.query.categoryId)
     }
     if (req.query.name && req.query.name !== 'null') {
       filters.name = {
@@ -33,7 +46,7 @@ router.get('/frontend-listing', async (req, res, next) => {
 
     let distanceFilters = null
 
-    if (req.query.lat && req.query.lng && req.query.distance) {
+    if (req.query.lat && req.query.lat !== 'null' && req.query.lng && req.query.lng !== 'null' && req.query.distance && req.query.distance !== 'null') {
       distanceFilters = {
         lat: parseFloat(req.query.lat),
         lng: parseFloat(req.query.lng),
@@ -61,6 +74,10 @@ router.get('/frontend-listing', async (req, res, next) => {
         'business.name': 1
       } */
     }
+
+    console.log(filters)
+    console.log(distanceFilters)
+    console.log(sort)
 
     let data = []
 
@@ -215,7 +232,7 @@ router.get('/frontend-listing', async (req, res, next) => {
   }
 })
 
-router.get('/frontend', async (req, res, next) => {
+/* router.get('/frontend', async (req, res, next) => {
   try {
     const filters = {}
     filters.active = true
@@ -262,14 +279,15 @@ router.get('/frontend', async (req, res, next) => {
     res.status(500).json(error)
   }
 })
-
+ */
 // GET SINGLE BUSINESS TYPE
 router.get('/id/:id', async (req, res, next) => {
   try {
     let business = await getBusiness(req.params.id)
-    const reviewCount = await getBusinessReviewsCounts(business._id)
+    const reviewData = await getReviewData(business._id)
     business = business.toObject()
-    business.reviewCount = reviewCount
+    business.reviewCount = reviewData.count
+    business.averageRating = reviewData.averageRating
     res.status(200).json(business)
   } catch (e) {
     res.status(500).json(e)
@@ -303,11 +321,6 @@ router.put('/:id', async (req, res, next) => {
   } catch (e) {
     res.status(500).json(e)
   }
-})
-
-router.get('/test/:id', async (req, res, next) => {
-  const data = await getReviewData(req.params.id)
-  res.status(200).json(data)
 })
 
 async function getBusiness (id) {
