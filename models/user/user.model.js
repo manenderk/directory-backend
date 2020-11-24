@@ -1,13 +1,11 @@
 const mongoose = require('mongoose')
+const crypto = require('crypto')
 
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
     unique: true
-  },
-  password: {
-    type: String
   },
   firstName: {
     type: String,
@@ -22,6 +20,17 @@ const UserSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: false
+  },
+  profileImage: {
+    type: String
+  },
+  hash: {
+    type: String,
+    required: true
+  },
+  salt: {
+    type: String,
+    required: true
   }
 }, {
   timestamps: true
@@ -33,5 +42,19 @@ UserSchema.set('toJSON', {
     return ret
   }
 })
+
+UserSchema.methods.setPassword = function (password) {
+  this.salt = crypto.randomBytes(16).toString('hex')
+  this.hash = getHash(password, this.salt)
+}
+
+UserSchema.methods.validPassword = function (password) {
+  var hash = getHash(password, this.salt)
+  return this.hash === hash
+}
+
+function getHash (password, salt) {
+  return crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
+}
 
 module.exports = mongoose.model('User', UserSchema)

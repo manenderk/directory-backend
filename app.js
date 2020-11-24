@@ -9,10 +9,14 @@ const compression = require('compression')
 const mongoose = require('mongoose')
 const helmet = require('helmet')
 const cors = require('cors')
+const passport = require('passport')
+require('dotenv').config()
+require('./config/passport.config')
 // #endregion
 
 // #region Router Imports
 const indexRouter = require('@routes/index')
+const AuthRouter = require('@routes/application/auth.route')
 const usersRouter = require('@routes/user/users.route')
 const CategoryRouter = require('@routes/category/category.route')
 const BusinessRouter = require('@routes/business/business.route')
@@ -55,7 +59,7 @@ mongoose.set('useCreateIndex', true)
 mongoose.set('useFindAndModify', false)
 mongoose.set('useUnifiedTopology', true)
 
-mongoose.connect('mongodb://127.0.0.1:27017/theDirectoryDb')
+mongoose.connect(process.env.MONGO_CONN)
   .then(() => console.log('Connected to database'))
   .catch(() => console.log('Database connection error'))
 /* mongoose.connect('mongodb+srv://clusteruser:Zx8eHnhzG2vENf1k@app-cluster-t6cjp.mongodb.net/TheDirectory?retryWrites=true&w=majority')
@@ -64,8 +68,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/theDirectoryDb')
 
 mongoose.set('debug', true)
 
+app.use(passport.initialize())
+
 // #region Routes
 app.use('/', indexRouter)
+app.use('/auth', AuthRouter)
 app.use('/users', usersRouter)
 app.use('/category', CategoryRouter)
 app.use('/business', BusinessRouter)
