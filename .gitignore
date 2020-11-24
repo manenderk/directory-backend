@@ -4,3 +4,5 @@ public/images
 public/uploads
 .eslintrc.json
 .vscode
+auth/public.key
+auth/private.key
