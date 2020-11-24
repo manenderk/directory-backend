@@ -66,7 +66,7 @@ mongoose.connect(process.env.MONGO_CONN)
   .then(() => console.log('Connected to database'))
   .catch(() => console.log('Database connection error')) */
 
-mongoose.set('debug', true)
+// mongoose.set('debug', true)
 
 app.use(passport.initialize())
 

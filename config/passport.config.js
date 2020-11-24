@@ -71,7 +71,8 @@ passport.use(
 
     if (!user) {
       user = new User({
-        name: userData.firstName + ' ' + userData.lastName,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
         email: userData.email,
         active: true
       })
