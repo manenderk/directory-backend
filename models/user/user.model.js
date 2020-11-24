@@ -24,6 +24,10 @@ const UserSchema = new mongoose.Schema({
   profileImage: {
     type: String
   },
+  role: {
+    type: String,
+    default: 'external'
+  },
   hash: {
     type: String,
     required: true

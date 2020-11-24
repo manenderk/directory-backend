@@ -1,8 +1,8 @@
 const passport = require('passport')
-const Crypto = require('crypto')
 const LocalStrategy = require('passport-local').Strategy
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const User = require('@models/user/user.model')
+const UserHelper = require('@utils/user.helper')
 require('dotenv').config()
 
 passport.use(
@@ -70,15 +70,7 @@ passport.use(
     var user = await User.findOne({ email: userData.email })
 
     if (!user) {
-      user = new User({
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        active: true
-      })
-      const password = Crypto.randomBytes(16).toString('base64').slice(0, 16)
-      user.setPassword(password)
-      await user.save()
+      user = await UserHelper.addUser(userData.email, userData.firstName, userData.lastName, true)
     }
     done(null, user)
   })

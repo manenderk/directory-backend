@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { v4: uuidv4 } = require('uuid')
+const UserHelper = require('@utils/user.helper')
 const BusinessReview = require('@models/business/business-review.model')
 const User = require('@models/user/user.model')
 
@@ -61,20 +61,13 @@ router.post('/add-review', async (req, res, next) => {
         return
       }
 
-      email = email.toLowerCase()
+      email = email.toString().trim().toLowerCase()
 
       let user = await User.findOne({
         email: email
       })
       if (!user || !user._id) {
-        user = new User({
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: uuidv4(),
-          active: true
-        })
-        await user.save()
+        user = await UserHelper.addUser(email, firstName, lastName)
       }
       ratedBy = user._id
     }
