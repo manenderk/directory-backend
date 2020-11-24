@@ -69,6 +69,28 @@ router.put('/:id', async (req, res, next) => {
   }
 })
 
+router.post('/reset-password/:id', async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id)
+    if (!user) {
+      res.status(404).json({
+        message: 'Not found'
+      })
+      return
+    }
+    user.setPassword(req.body.password)
+    await User.findByIdAndUpdate(
+      user._id,
+      user
+    )
+    res.status(200).json({
+      message: 'Success'
+    })
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
+
 router.delete('/:id', async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id)
