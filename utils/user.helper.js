@@ -2,7 +2,7 @@ const User = require('@models/user/user.model')
 const Crypto = require('crypto')
 
 module.exports = {
-  addUser: async (email, firstName, lastName, active = false, password = null) => {
+  addUser: async (email, firstName, lastName, active = false, role = 'external', password = null) => {
     if (!email || !firstName) {
       return null
     }
@@ -18,7 +18,8 @@ module.exports = {
       email: email,
       firstName: firstName,
       lastName: lastName,
-      active: active
+      active: active,
+      role: role
     })
     if (!password) {
       password = Crypto.randomBytes(16).toString('base64').slice(0, 16)

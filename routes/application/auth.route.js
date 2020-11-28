@@ -26,7 +26,8 @@ router.post('/login-local', async (req, res, next) => {
       }
       const token = auth.generateToken(user)
       res.status(200).json({
-        token: token
+        token: token,
+        user: user
       })
     })(req, res, next)
   } catch (error) {

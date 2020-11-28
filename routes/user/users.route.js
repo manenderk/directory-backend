@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('@models/user/user.model')
+const UserHelper = require('@utils/user.helper')
 
 // GET ALL USERS
 router.get('/', async (req, res, next) => {
@@ -26,7 +27,14 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+/* router.post('/register', async (req, res, next) => {
+  try {
+    const user = await UserHelper.addUser(req.body.email, )
+  } catch (error) {
+  }
+}) */
+
+/* router.post('/', async (req, res, next) => {
   try {
     var password = ''
     if (req.body.password) {
@@ -46,7 +54,7 @@ router.post('/', async (req, res, next) => {
   } catch (error) {
     res.status(500).json(error)
   }
-})
+}) */
 
 router.put('/:id', async (req, res, next) => {
   try {
