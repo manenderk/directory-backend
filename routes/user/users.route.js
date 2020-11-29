@@ -27,12 +27,13 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-/* router.post('/register', async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
   try {
-    const user = await UserHelper.addUser(req.body.email, )
+    const user = await UserHelper.addUser(req.body.email, req.body.firstName, req.body.lastName, false, 'external', req.body.password)
+    res.status(201).json(user)
   } catch (error) {
   }
-}) */
+})
 
 /* router.post('/', async (req, res, next) => {
   try {

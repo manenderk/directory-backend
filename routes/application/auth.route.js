@@ -3,6 +3,15 @@ const router = express.Router()
 const passport = require('passport')
 const auth = require('@auth/auth')
 
+function encodeAuthData (token, user) {
+  let data = {
+    token: token,
+    user: user
+  }
+  data = JSON.stringify(data)
+  return Buffer.from(data, 'utf-8').toString('base64')
+}
+
 router.post('/login-local', async (req, res, next) => {
   try {
     if (!req.body.email || !req.body.password) {
@@ -25,9 +34,9 @@ router.post('/login-local', async (req, res, next) => {
         return
       }
       const token = auth.generateToken(user)
+      const encodedData = encodeAuthData(token, user)
       res.status(200).json({
-        token: token,
-        user: user
+        data: encodedData
       })
     })(req, res, next)
   } catch (error) {
@@ -53,9 +62,8 @@ router.get('/google/redirect', async (req, res, next) => {
         return
       }
       const token = auth.generateToken(user)
-      res.status(200).json({
-        token: token
-      })
+      const authData = encodeAuthData(token, user)
+      res.redirect('http://localhost:4200/auth/stage-social-redirect?auth=' + authData)
     })(req, res, next)
   } catch (error) {
     res.status(500).json(error)
