@@ -32,6 +32,7 @@ const FileRouter = require('@routes/application/file.route')
 const OpeningHourRouter = require('@routes/application/opening-hours.route.js')
 const UtilRouter = require('@routes/application/util.route.js')
 const UIRouter = require('@routes/application/ui.route.js')
+const { handleError } = require('./utils/errors')
 // #endregion
 
 // #region Express Configuration
@@ -89,5 +90,9 @@ app.use('/opening-hours', OpeningHourRouter)
 app.use('/util', UtilRouter)
 app.use('/ui', UIRouter)
 // #endregion
+
+app.use(function (err, req, res, next) {
+  handleError(err, res)
+})
 
 module.exports = app

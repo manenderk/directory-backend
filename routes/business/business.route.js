@@ -3,6 +3,7 @@ const router = express.Router()
 const Business = require('@models/business/business.model')
 const BusinessReview = require('@models/business/business-review.model')
 const Mongoose = require('mongoose')
+const { NotFoundError, handleError } = require('../../utils/errors')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
@@ -284,13 +285,16 @@ router.get('/frontend-listing', async (req, res, next) => {
 router.get('/id/:id', async (req, res, next) => {
   try {
     let business = await getBusiness(req.params.id)
+    if (!business) {
+      throw new NotFoundError()
+    }
     const reviewData = await getReviewData(business._id)
     business = business.toObject()
     business.reviewCount = reviewData.count
     business.averageRating = reviewData.averageRating
     res.status(200).json(business)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
