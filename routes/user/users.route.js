@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('@models/user/user.model')
 const UserHelper = require('@utils/user.helper')
+const { handleError } = require('../../utils/errors')
 
 // GET ALL USERS
 router.get('/', async (req, res, next) => {
@@ -32,30 +33,9 @@ router.post('/register', async (req, res, next) => {
     const user = await UserHelper.addUser(req.body.email, req.body.firstName, req.body.lastName, false, 'external', req.body.password)
     res.status(201).json(user)
   } catch (error) {
+    handleError(error, res)
   }
 })
-
-/* router.post('/', async (req, res, next) => {
-  try {
-    var password = ''
-    if (req.body.password) {
-      // password = await authHelper.encryptPassword(req.body.password)
-    }
-    const user = new User({
-      firstName: req.body.firstName,
-      middleName: req.body.middleName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: password,
-      active: req.body.active
-    })
-    console.log(user)
-    await user.save()
-    res.status(201).json(user)
-  } catch (error) {
-    res.status(500).json(error)
-  }
-}) */
 
 router.put('/:id', async (req, res, next) => {
   try {
@@ -69,8 +49,9 @@ router.put('/:id', async (req, res, next) => {
     })
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      user,
-      { new: true }
+      user, {
+        new: true
+      }
     )
     res.status(200).json(updatedUser)
   } catch (error) {

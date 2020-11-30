@@ -12,9 +12,17 @@ class InternalServerError extends Error {
   }
 }
 
+class DuplicateRecordError extends Error {
+  constructor (message = '') {
+    super(message)
+    this.name = 'DuplicateRecordError'
+  }
+}
+
 module.exports = {
   NotFoundError,
   InternalServerError,
+  DuplicateRecordError,
   handleError: (err, res) => {
     if (err.name === 'UnauthorizedError') {
       res.status(401).json({ message: err.name + ' : ' + err.message })
