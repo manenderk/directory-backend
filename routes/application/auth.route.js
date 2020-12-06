@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-const auth = require('@auth/auth')
+const auth = require('../../auth/auth')
 
 function encodeAuthData (token, user) {
   let data = {
