@@ -1,6 +1,7 @@
 const express = require('express')
+const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
-const HomeSlider = require('@models/application/home-slider.model')
+const HomeSlider = require('../../models/application/home-slider.model')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -24,7 +25,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', jwtAuth, async (req, res, next) => {
   try {
     let homeSlider = new HomeSlider({
       image: req.body.image,
@@ -39,7 +40,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     const slider = new HomeSlider({
       _id: req.params.id,
@@ -59,7 +60,7 @@ router.put('/:id', async (req, res, next) => {
   }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', jwtAuth, async (req, res, next) => {
   try {
     await HomeSlider.findByIdAndDelete(req.params.id)
     res.status(200).json('')
