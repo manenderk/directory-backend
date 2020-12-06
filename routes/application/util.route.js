@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const config = require('@root/config')
+const config = require('../../config')
 const csvjson = require('csvjson')
 const fs = require('fs')
-const Category = require('@models/category/category.model')
-const GetNumber = require('@utils/get-number')
+const Category = require('../../models/category/category.model')
+const GetNumber = require('../../utils/get-number')
 
 router.get('/', async (req, res, next) => {
   try {

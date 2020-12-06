@@ -1,15 +1,15 @@
 const express = require('express')
-const jwt = require('express-jwt')
 const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
 const OpeningHours = require('../../models/application/opening-hours.model')
+const { handleError } = require('../../utils/errors')
 
 router.get('/', async (req, res, next) => {
   try {
     const openinghourss = await OpeningHours.find()
     res.status(200).json(openinghourss)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -18,7 +18,7 @@ router.get('/:id', async (req, res, next) => {
     const openinghours = await OpeningHours.findById(req.params.id)
     res.status(200).json(openinghours)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -36,7 +36,7 @@ router.post('/', jwtAuth, async (req, res, next) => {
     await openinghours.save()
     res.status(201).json(openinghours)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -59,16 +59,16 @@ router.put('/:id', jwtAuth, async (req, res, next) => {
     openinghours = await OpeningHours.findById(openinghours._id)
     res.status(200).json(openinghours)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', jwtAuth, async (req, res, next) => {
   try {
     await OpeningHours.findByIdAndDelete(req.params.id)
     res.status(200).json('')
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 

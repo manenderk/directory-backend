@@ -1,21 +1,36 @@
+const errorNames = {
+  notFound: 'NotFoundError',
+  internalServer: 'InternalServerError',
+  duplicateRecord: 'DuplicateRecordError',
+  badReqeust: 'BadRequestError',
+  unauthorized: 'UnauthorizedError'
+}
+
 class NotFoundError extends Error {
-  constructor (message = '') {
+  constructor (message = 'record not found') {
     super(message)
-    this.name = 'NotFoundError'
+    this.name = errorNames.badReqeust
   }
 }
 
 class InternalServerError extends Error {
-  constructor (message) {
+  constructor (message = 'internal server error') {
     super(message)
-    this.name = 'InternalServerError'
+    this.name = errorNames.internalServer
   }
 }
 
 class DuplicateRecordError extends Error {
-  constructor (message = '') {
+  constructor (message = 'duplicate record') {
     super(message)
-    this.name = 'DuplicateRecordError'
+    this.name = errorNames.duplicateRecord
+  }
+}
+
+class BadRequestError extends Error {
+  constructor (message = 'bad request') {
+    super(message)
+    this.name = errorNames.badReqeust
   }
 }
 
@@ -23,15 +38,23 @@ module.exports = {
   NotFoundError,
   InternalServerError,
   DuplicateRecordError,
+  BadRequestError,
   handleError: (err, res) => {
-    if (err.name === 'UnauthorizedError') {
-      res.status(401).json({ message: err.name + ' : ' + err.message })
-    } else if (err.name === 'NotFoundError') {
-      res.status(404).json({ message: 'Record Not Found' })
-    } else if (err.name === 'InternalServerError') {
-      res.status(500).json({ message: 'Internal Server Error : ' + err.message })
-    } else {
-      res.status(500).json({ message: err.name + ' : ' + err.message })
+    const error = {
+      message: err.name + ': ' + err.message,
+      error: err
     }
+    if (err.name === errorNames.badReqeust) {
+      res.status(400)
+    } else if (err.name === errorNames.unauthorized) {
+      res.status(401)
+    } else if (err.name === errorNames.notFound) {
+      res.status(404)
+    } else if (err.name === errorNames.internalServer) {
+      res.status(500)
+    } else {
+      res.status(500)
+    }
+    res.json(error)
   }
 }

@@ -5,6 +5,7 @@ const config = require('../../config')
 const base64Img = require('../../utils/img-base-64')
 const path = require('path')
 const jwtAuth = require('../../auth/jwt-auth')
+const { InternalServerError, NotFoundError, handleError } = require('../../utils/errors')
 const uploader = require('../../utils/file-uploader')(config.uploadDirectory, 'file')
 
 router.post('/upload', jwtAuth, uploader, async (req, res, next) => {
@@ -24,27 +25,21 @@ router.post('/upload', jwtAuth, uploader, async (req, res, next) => {
       const pathName = config.projectRoot + path.sep + 'public' + path.sep + 'uploads'
       base64Img.img(req.body.fileBase64, pathName, fileName, async (err, filepath) => {
         if (err) {
-          throw (err)
+          throw new InternalServerError(err.message)
         }
         if (filepath) {
           media.path = config.uploadDirectory + '/' + filepath.split(path.sep).pop()
           await media.save()
           res.status(201).json(media)
         } else {
-          const message = {
-            message: 'file path not found'
-          }
-          res.status(500).json(message)
+          throw new InternalServerError('file path not found')
         }
       })
     } else {
-      const message = {
-        message: 'file not found'
-      }
-      res.status(400).json(message)
+      throw new NotFoundError('file not found')
     }
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -64,7 +59,7 @@ router.get('/', async (req, res, next) => {
     const medias = await Media.find(filters).sort({ createdAt: -1 })
     res.status(200).json(medias)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 

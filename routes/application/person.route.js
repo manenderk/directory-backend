@@ -1,13 +1,15 @@
 const express = require('express')
+const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
-const Person = require('@models/application/person.model')
+const Person = require('../../models/application/person.model')
+const { handleError } = require('../../utils/errors')
 
 router.get('/', async (req, res, next) => {
   try {
     const persons = await Person.find().populate('image')
     res.status(200).json(persons)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -15,12 +17,12 @@ router.get('/:id', async (req, res, next) => {
   try {
     const person = await Person.findById(req.params.id).populate('image')
     res.status(200).json(person)
-  } catch (error) {
-    res.status(500).json(error)
+  } catch (e) {
+    handleError(e, res)
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', jwtAuth, async (req, res, next) => {
   try {
     let person = new Person({
       image: req.body.image,
@@ -32,11 +34,11 @@ router.post('/', async (req, res, next) => {
     person = await Person.findById(person._id).populate('image')
     res.status(201).json(person)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     let person = new Person({
       _id: req.body.id,
@@ -52,16 +54,16 @@ router.put('/:id', async (req, res, next) => {
     person = await Person.findById(person._id).populate('image')
     res.status(200).json(person)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', jwtAuth, async (req, res, next) => {
   try {
     await Person.findByIdAndDelete(req.params.id)
     res.status(200).json('')
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 

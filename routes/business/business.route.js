@@ -11,8 +11,8 @@ router.get('/', async (req, res, next) => {
     const businesses = await Business.find()
       .populate('category').sort('-createdAt')
     res.status(200).json(businesses)
-  } catch (e) {
-    res.status(500).json(e)
+  } catch (error) {
+    handleError(error, res)
   }
 })
 
@@ -75,10 +75,6 @@ router.get('/frontend-listing', async (req, res, next) => {
         'business.name': 1
       } */
     }
-
-    console.log(filters)
-    console.log(distanceFilters)
-    console.log(sort)
 
     let data = []
 
@@ -226,10 +222,8 @@ router.get('/frontend-listing', async (req, res, next) => {
     }
 
     res.status(200).json(data)
-  } catch (e) {
-    console.log('Error')
-    console.log(e)
-    res.status(500).json(e)
+  } catch (error) {
+    handleError(error, res)
   }
 })
 

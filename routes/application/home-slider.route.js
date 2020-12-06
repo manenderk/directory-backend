@@ -2,6 +2,7 @@ const express = require('express')
 const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
 const HomeSlider = require('../../models/application/home-slider.model')
+const { handleError } = require('../../utils/errors')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -12,7 +13,7 @@ router.get('/', async (req, res, next) => {
     const sliders = await HomeSlider.find(filters).sort({ createdAt: -1 }).populate('image')
     res.status(200).json(sliders)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -21,7 +22,7 @@ router.get('/:id', async (req, res, next) => {
     const slider = await HomeSlider.findById(req.params.id).populate('image')
     res.status(200).json(slider)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -36,7 +37,7 @@ router.post('/', jwtAuth, async (req, res, next) => {
     homeSlider = await HomeSlider.findById(homeSlider._id).populate('image')
     res.status(201).json(homeSlider)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -56,7 +57,7 @@ router.put('/:id', jwtAuth, async (req, res, next) => {
     updatedSlider = await HomeSlider.findById(updatedSlider._id).populate('image')
     res.status(200).json(updatedSlider)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -65,7 +66,7 @@ router.delete('/:id', jwtAuth, async (req, res, next) => {
     await HomeSlider.findByIdAndDelete(req.params.id)
     res.status(200).json('')
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
