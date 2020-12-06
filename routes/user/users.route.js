@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const User = require('@models/user/user.model')
-const UserHelper = require('@utils/user.helper')
-const { handleError } = require('../../utils/errors')
+const User = require('../../models/user/user.model')
+const UserHelper = require('../../utils/user.helper')
+const { handleError, NotFoundError } = require('../../utils/errors')
+const jwtAuth = require('../../auth/jwt-auth')
 
 // GET ALL USERS
 router.get('/', async (req, res, next) => {
@@ -10,7 +11,7 @@ router.get('/', async (req, res, next) => {
     const users = await User.find()
     res.status(200).json(users)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -21,10 +22,10 @@ router.get('/:id', async (req, res, next) => {
     if (user) {
       res.status(200).json(user)
     } else {
-      res.sendStatus(404)
+      throw new NotFoundError()
     }
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -37,7 +38,7 @@ router.post('/register', async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     const user = new User({
       _id: req.params.id,
@@ -55,18 +56,15 @@ router.put('/:id', async (req, res, next) => {
     )
     res.status(200).json(updatedUser)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
-router.post('/reset-password/:id', async (req, res, next) => {
+router.post('/reset-password/:id', jwtAuth, async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id)
     if (!user) {
-      res.status(404).json({
-        message: 'Not found'
-      })
-      return
+      throw new NotFoundError()
     }
     user.setPassword(req.body.password)
     await User.findByIdAndUpdate(
@@ -77,16 +75,16 @@ router.post('/reset-password/:id', async (req, res, next) => {
       message: 'Success'
     })
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', jwtAuth, async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id)
     res.sendStatus(200)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 

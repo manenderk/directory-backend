@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const Business = require('@models/business/business.model')
-const BusinessReview = require('@models/business/business-review.model')
+const Business = require('../../models/business/business.model')
+const BusinessReview = require('../../models/business/business-review.model')
 const Mongoose = require('mongoose')
 const { NotFoundError, handleError } = require('../../utils/errors')
 

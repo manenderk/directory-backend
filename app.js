@@ -12,27 +12,11 @@ const cors = require('cors')
 const passport = require('passport')
 require('dotenv').config()
 require('./config/passport.config')
+const { handleError } = require('./utils/errors')
 // #endregion
 
 // #region Router Imports
 const indexRouter = require('@routes/index')
-const AuthRouter = require('@routes/application/auth.route')
-const usersRouter = require('@routes/user/users.route')
-const CategoryRouter = require('@routes/category/category.route')
-const BusinessRouter = require('@routes/business/business.route')
-const BusinessReviewRouter = require('@routes/business/business-review.route')
-const DropdownRouter = require('@routes/common/dropdown.route')
-const MediaRouter = require('@routes/application/media.route')
-const HomeSliderRouter = require('@routes/application/home-slider.route')
-const PersonRouter = require('@routes/application/person.route')
-const PricingPackageRouter = require('@routes/application/pricing-package.route')
-const EventRouter = require('@routes/event/event.route')
-const NewsRouter = require('@routes/news/news.route')
-const FileRouter = require('@routes/application/file.route')
-const OpeningHourRouter = require('@routes/application/opening-hours.route.js')
-const UtilRouter = require('@routes/application/util.route.js')
-const UIRouter = require('@routes/application/ui.route.js')
-const { handleError } = require('./utils/errors')
 // #endregion
 
 // #region Express Configuration
@@ -72,23 +56,8 @@ mongoose.connect(process.env.MONGO_CONN)
 app.use(passport.initialize())
 
 // #region Routes
-app.use('/', indexRouter)
-app.use('/auth', AuthRouter)
-app.use('/users', usersRouter)
-app.use('/category', CategoryRouter)
-app.use('/business', BusinessRouter)
-app.use('/business-review', BusinessReviewRouter)
-app.use('/dropdown', DropdownRouter)
-app.use('/media', MediaRouter)
-app.use('/home-slider', HomeSliderRouter)
-app.use('/contact-person', PersonRouter)
-app.use('/pricing-package', PricingPackageRouter)
-app.use('/event', EventRouter)
-app.use('/news', NewsRouter)
-app.use('/file', FileRouter)
-app.use('/opening-hours', OpeningHourRouter)
-app.use('/util', UtilRouter)
-app.use('/ui', UIRouter)
+app.use('', indexRouter)
+
 // #endregion
 
 app.use(function (err, req, res, next) {

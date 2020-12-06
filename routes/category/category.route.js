@@ -1,6 +1,8 @@
 const express = require('express')
-const Category = require('@models/category/category.model')
-const GetNumber = require('@utils/get-number')
+const jwtAuth = require('../../auth/jwt-auth')
+const Category = require('../../models/category/category.model')
+const { handleError } = require('../../utils/errors')
+const GetNumber = require('../../utils/get-number')
 const router = express.Router()
 
 // GET ALL categories
@@ -9,7 +11,7 @@ router.get('/', async (req, res, next) => {
     const documents = await Category.find().sort({ createdAt: -1 }).populate('image').populate('parentCategory')
     res.status(200).json(documents)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -19,7 +21,7 @@ router.get('/id/:id', async (req, res, next) => {
     const category = await Category.findById(req.params.id).populate('image').populate('parentCategory')
     res.status(200).json(category)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -33,12 +35,12 @@ router.get('/frontend', async (req, res, next) => {
     }).populate('image').populate('parentCategory')
     res.status(200).json(categories)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
 // ADD Category
-router.post('/', async (req, res, next) => {
+router.post('/', jwtAuth, async (req, res, next) => {
   try {
     const number = await GetNumber(Category)
     let category = new Category({
@@ -56,12 +58,12 @@ router.post('/', async (req, res, next) => {
     category = await Category.findById(category._id).populate('image').populate('parentCategory')
     res.status(201).json(category)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
 // UPDATE CATEGORY
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     let category = new Category({
       _id: req.params.id,
@@ -81,7 +83,7 @@ router.put('/:id', async (req, res, next) => {
     category = await Category.findById(category._id).populate('image').populate('parentCategory')
     res.status(200).json(category)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 

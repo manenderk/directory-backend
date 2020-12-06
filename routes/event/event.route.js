@@ -1,5 +1,7 @@
 const express = require('express')
-const Event = require('@models/event/event.model')
+const Event = require('../../models/event/event.model')
+const { handleError } = require('../../utils/errors')
+const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
 
 // GET ALL events
@@ -21,7 +23,7 @@ router.get('/', async (req, res, next) => {
       })
     res.status(200).json(documents)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -30,7 +32,7 @@ router.get('/list', async (req, res, next) => {
     const documents = await Event.find().sort({ createdAt: -1 })
     res.status(200).json(documents)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -41,7 +43,7 @@ router.get('/featured', async (req, res, next) => {
     ).populate('thumbnailImage')
     res.status(200).json(documents)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -64,7 +66,7 @@ router.get('/id/:id', async (req, res, next) => {
       })
     res.status(200).json(event)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
@@ -78,12 +80,12 @@ router.get('/frontend', async (req, res, next) => {
     }).populate('thumbnailImage')
     res.status(200).json(events)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
 // ADD Event
-router.post('/', async (req, res, next) => {
+router.post('/', jwtAuth, async (req, res, next) => {
   try {
     let event = new Event({
       name: req.body.name,
@@ -125,12 +127,12 @@ router.post('/', async (req, res, next) => {
       })
     res.status(201).json(event)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
 // UPDATE EVENT
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     let event = new Event({
       _id: req.params.id,
@@ -175,17 +177,17 @@ router.put('/:id', async (req, res, next) => {
       })
     res.status(200).json(event)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
 // Clean up events
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', jwtAuth, async (req, res, next) => {
   try {
     await Event.findByIdAndDelete(req.params.id)
     res.sendStatus(200).json('')
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 

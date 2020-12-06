@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const UserHelper = require('../../utils/user.helper')
-const BusinessReview = require('@models/business/business-review.model')
-const User = require('@models/user/user.model')
+const BusinessReview = require('../../models/business/business-review.model')
+const User = require('../../models/user/user.model')
 const jwtAuth = require('../../auth/jwt-auth')
 const { handleError } = require('../../utils/errors')
 

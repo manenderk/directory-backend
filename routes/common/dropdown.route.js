@@ -1,6 +1,6 @@
 const express = require('express')
 const Router = express.Router()
-const Category = require('@models/category/category.model.js')
+const Category = require('../../models/category/category.model.js')
 
 Router.get('/options/:optionType', async (req, res, next) => {
   try {

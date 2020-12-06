@@ -1,13 +1,15 @@
 const express = require('express')
 const router = express.Router()
-const News = require('@models/news/news.model')
+const News = require('../../models/news/news.model')
+const { handleError } = require('../../utils/errors')
+const jwtAuth = require('../../auth/jwt-auth')
 
 router.get('/', async (req, res, next) => {
   try {
     const news = await News.find().select('-body').sort({ createdAt: -1 })
     res.status(200).json(news)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -16,7 +18,7 @@ router.get('/id/:id', async (req, res, next) => {
     const news = await News.findById(req.params.id).populate('bannerImage').populate('thumbnailImage')
     res.status(200).json(news)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -29,11 +31,11 @@ router.get('/frontend', async (req, res, next) => {
     }).populate('thumbnailImage')
     res.status(200).json(news)
   } catch (e) {
-    res.status(500).json(e)
+    handleError(e, res)
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', jwtAuth, async (req, res, next) => {
   try {
     let news = new News({
       title: req.body.title,
@@ -48,11 +50,11 @@ router.post('/', async (req, res, next) => {
     news = await News.findById(news._id).populate('bannerImage').populate('thumbnailImage')
     res.status(201).json(news)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
-router.put('/id/:id', async (req, res, next) => {
+router.put('/id/:id', jwtAuth, async (req, res, next) => {
   try {
     let news = new News({
       _id: req.params.id,
@@ -68,7 +70,7 @@ router.put('/id/:id', async (req, res, next) => {
     news = await News.findById(news._id).populate('bannerImage').populate('thumbnailImage')
     res.status(200).json(news)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
@@ -82,7 +84,7 @@ router.put('/increse-view-count/:id', async (req, res, next) => {
     }
     res.status(200).json(resBody)
   } catch (error) {
-    res.status(500).json(error)
+    handleError(error, res)
   }
 })
 
