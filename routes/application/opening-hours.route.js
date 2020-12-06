@@ -1,6 +1,8 @@
 const express = require('express')
+const jwt = require('express-jwt')
+const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
-const OpeningHours = require('@models/application/opening-hours.model')
+const OpeningHours = require('../../models/application/opening-hours.model')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -20,7 +22,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', jwtAuth, async (req, res, next) => {
   try {
     const openinghours = new OpeningHours({
       monday: req.body.monday,
@@ -38,7 +40,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     let openinghours = new OpeningHours({
       _id: req.body.id,
