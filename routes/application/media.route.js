@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const Media = require('@models/application/media.model')
-const config = require('@root/config')
-const base64Img = require('@utils/img-base-64')
+const Media = require('../../models/application/media.model')
+const config = require('../../config')
+const base64Img = require('../../utils/img-base-64')
 const path = require('path')
-const uploader = require('@root/utils/file-uploader')(config.uploadDirectory, 'file')
+const jwtAuth = require('../../auth/jwt-auth')
+const uploader = require('../../utils/file-uploader')(config.uploadDirectory, 'file')
 
-router.post('/upload', uploader, async (req, res, next) => {
+router.post('/upload', jwtAuth, uploader, async (req, res, next) => {
   try {
     const media = new Media({
       fileType: req.body.fileType,
