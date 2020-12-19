@@ -42,10 +42,9 @@ router.get('/frontend', async (req, res, next) => {
 // ADD Category
 router.post('/', jwtAuth, async (req, res, next) => {
   try {
-    const number = await GetNumber(Category)
     let category = new Category({
       name: req.body.name,
-      number: number,
+      number: await GetNumber(Category),
       image: req.body.image,
       parentCategory: req.body.parentCategory,
       description: req.body.description,
@@ -67,8 +66,8 @@ router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     let category = new Category({
       _id: req.params.id,
-      name: req.body.name,
       number: req.body.number,
+      name: req.body.name,
       image: req.body.image,
       parentCategory: req.body.parentCategory,
       description: req.body.description,

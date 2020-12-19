@@ -4,6 +4,7 @@ const Business = require('../../models/business/business.model')
 const BusinessReview = require('../../models/business/business-review.model')
 const Mongoose = require('mongoose')
 const { NotFoundError, handleError } = require('../../utils/errors')
+const GetNumber = require('../../utils/get-number')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
@@ -295,7 +296,7 @@ router.get('/id/:id', async (req, res, next) => {
 // ADD BUSINESS
 router.post('/', async (req, res, next) => {
   try {
-    let business = getBusinessModelFromReqObject(req)
+    let business = await getBusinessModelFromReqObject(req)
     await business.save()
     business = await getBusiness(business._id)
     res.status(201).json(business)
@@ -307,7 +308,7 @@ router.post('/', async (req, res, next) => {
 // UPDATE BUSINESS
 router.put('/:id', async (req, res, next) => {
   try {
-    let business = getBusinessModelFromReqObject(req, req.params.id)
+    let business = await getBusinessModelFromReqObject(req, req.params.id)
     business = await Business.findByIdAndUpdate(
       req.params.id,
       business, {
@@ -345,7 +346,7 @@ async function getBusiness (id) {
   return business
 }
 
-function getBusinessModelFromReqObject (req, id = null) {
+async function getBusinessModelFromReqObject (req, id = null) {
   const business = new Business({
     name: req.body.name,
     category: req.body.category,
@@ -372,6 +373,9 @@ function getBusinessModelFromReqObject (req, id = null) {
   })
   if (id) {
     business._id = id
+    business.number = req.body.number
+  } else {
+    business.number = await GetNumber(Business)
   }
   return business
 }

@@ -3,6 +3,7 @@ const router = express.Router()
 const News = require('../../models/news/news.model')
 const { handleError } = require('../../utils/errors')
 const jwtAuth = require('../../auth/jwt-auth')
+const GetNumber = require('../../utils/get-number')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -38,6 +39,7 @@ router.get('/frontend', async (req, res, next) => {
 router.post('/', jwtAuth, async (req, res, next) => {
   try {
     let news = new News({
+      number: await GetNumber(News),
       title: req.body.title,
       thumbnailImage: req.body.thumbnailImage,
       bannerImage: req.body.bannerImage,
@@ -58,6 +60,7 @@ router.put('/id/:id', jwtAuth, async (req, res, next) => {
   try {
     let news = new News({
       _id: req.params.id,
+      number: req.body.number,
       title: req.body.title,
       thumbnailImage: req.body.thumbnailImage,
       bannerImage: req.body.bannerImage,

@@ -14,11 +14,11 @@ const EventRouter = require('./event/event.route')
 const NewsRouter = require('./news/news.route')
 const FileRouter = require('./application/file.route')
 const OpeningHourRouter = require('./application/opening-hours.route')
-const UtilRouter = require('./application/util.route')
 const UIRouter = require('./application/ui.route')
+const DataManagementRouter = require('./data-management/data-management.route')
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/get-csv', function (req, res, next) {
   res.status(200).write('EXPRESS')
 })
 
@@ -36,7 +36,7 @@ router.use('/event', EventRouter)
 router.use('/news', NewsRouter)
 router.use('/file', FileRouter)
 router.use('/opening-hours', OpeningHourRouter)
-router.use('/util', UtilRouter)
 router.use('/ui', UIRouter)
+router.use('/data-management', DataManagementRouter)
 
 module.exports = router

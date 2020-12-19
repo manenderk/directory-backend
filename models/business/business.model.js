@@ -3,6 +3,11 @@ const mongoose = require('mongoose')
 const GeoJSON = require('mongoose-geojson-schema')
 
 const BusinessSchema = new mongoose.Schema({
+  number: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   name: {
     type: String,
     required: true

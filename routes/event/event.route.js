@@ -2,6 +2,7 @@ const express = require('express')
 const Event = require('../../models/event/event.model')
 const { handleError } = require('../../utils/errors')
 const jwtAuth = require('../../auth/jwt-auth')
+const GetNumber = require('../../utils/get-number')
 const router = express.Router()
 
 // GET ALL events
@@ -88,6 +89,7 @@ router.get('/frontend', async (req, res, next) => {
 router.post('/', jwtAuth, async (req, res, next) => {
   try {
     let event = new Event({
+      number: await GetNumber(Event),
       name: req.body.name,
       date: req.body.date,
       time: req.body.time,
@@ -136,6 +138,7 @@ router.put('/:id', jwtAuth, async (req, res, next) => {
   try {
     let event = new Event({
       _id: req.params.id,
+      number: req.body.number,
       name: req.body.name,
       date: req.body.date,
       time: req.body.time,
