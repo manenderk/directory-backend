@@ -46,7 +46,7 @@ router.get('/get-csv/:entity', async (req, res, next) => {
     mkdirp.sync(uploadPath)
     fs.writeFileSync(uploadPath + '/' + fileName, csvData)
     const obj = {
-      file: uploadPath
+      file: '/files/' + fileName
     }
     res.status(200).json(obj)
   } catch (error) {
