@@ -40,10 +40,10 @@ router.get('/get-csv/:entity', async (req, res, next) => {
       headers: 'key'
     })
 
-    const fileName = entity + Date.now() + '.csv'
+    const fileName = entity + '.csv'
     const uploadPath = config.exportFilesDirectory + '/' + fileName
     const fullPath = 'public' + uploadPath
-    fs.writeFileSync(fullPath, csvData)
+    fs.writeFileSync(fullPath, csvData, { flag: 'w' })
     const obj = {
       file: uploadPath
     }
