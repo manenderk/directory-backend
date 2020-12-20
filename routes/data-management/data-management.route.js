@@ -11,6 +11,7 @@ const config = require('../../config')
 const csvjson = require('csvjson')
 const fs = require('fs')
 const { BadRequestError, handleError } = require('../../utils/errors')
+const importCategories = require('./import/import-category')
 require('dotenv').config()
 
 router.get('/get-csv/:entity', async (req, res, next) => {
@@ -83,6 +84,35 @@ router.delete('/delete-collection/:entity', async (req, res, next) => {
     res.status(200).json({ message: 'success' })
   } catch (e) {
     handleError(e, res)
+  }
+})
+
+router.post('/import/:entity', async (req, res, next) => {
+  try {
+    const data = req.body
+    if (!data) {
+      throw new BadRequestError('No data provided')
+    }
+
+    const entity = req.params.entity
+
+    switch (entity) {
+      case 'category':
+        await importCategories(data)
+        break
+      case 'business':
+        break
+      case 'event':
+        break
+      case 'news':
+        break
+      default:
+        throw new BadRequestError('Invalid Entity')
+    }
+
+    res.status(200).json({ message: 'success' })
+  } catch (error) {
+    handleError(error, res)
   }
 })
 
