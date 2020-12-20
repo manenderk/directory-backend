@@ -10,6 +10,7 @@ const PricingPackage = require('../../models/application/pricing-package.model')
 const config = require('../../config')
 const csvjson = require('csvjson')
 const fs = require('fs')
+const mkdirp = require('mkdirp')
 const { BadRequestError, handleError } = require('../../utils/errors')
 const importCategories = require('./import/import-category')
 require('dotenv').config()
@@ -40,10 +41,10 @@ router.get('/get-csv/:entity', async (req, res, next) => {
       headers: 'key'
     })
 
-    const fileName = entity + Date.now() + '.csv'
-    const uploadPath = config.exportFilesDirectory + '/' + fileName
-    const fullPath = config.projectRoot + '/public' + uploadPath
-    fs.writeFileSync(fullPath, csvData)
+    const fileName = entity + '.csv'
+    const uploadPath = config.projectRoot + '/public/files'
+    mkdirp.sync(uploadPath)
+    fs.writeFileSync(uploadPath + '/' + fileName, csvData)
     const obj = {
       file: uploadPath
     }
