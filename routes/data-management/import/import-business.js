@@ -14,17 +14,8 @@ async function importBusinesses (businessesData) {
     if (businessData.number) {
       await Business.findByIdAndUpdate(businessDoc._id, businessDoc)
     } else {
-      let inserted = false
-      while (!inserted) {
-        businessDoc.number = number++
-        const bus = await Business.find({number: businessDoc.number})
-        if (!bus) {
-          await businessDoc.save()
-          inserted = true
-        } else {
-          businessDoc.number = number++
-        }
-      }
+      businessDoc.number = number++
+      await businessDoc.save()
     }
   }))
 }
