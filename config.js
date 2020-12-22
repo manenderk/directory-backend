@@ -1,6 +1,7 @@
 const config = {
   projectRoot: __dirname,
   uploadDirectory: '/uploads',
+  exportFilesDirectory: '/files',
   auth: {
     bcryptIterations: 10,
     issuer: 'TheDirectory',

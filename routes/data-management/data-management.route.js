@@ -13,6 +13,7 @@ const fs = require('fs')
 const mkdirp = require('mkdirp')
 const { BadRequestError, handleError } = require('../../utils/errors')
 const importCategories = require('./import/import-category')
+const importBusinesses = require('./import/import-business')
 require('dotenv').config()
 
 router.get('/get-csv/:entity', async (req, res, next) => {
@@ -102,6 +103,7 @@ router.post('/import/:entity', async (req, res, next) => {
         await importCategories(data)
         break
       case 'business':
+        await importBusinesses(data)
         break
       case 'event':
         break
