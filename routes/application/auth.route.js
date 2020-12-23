@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const auth = require('../../auth/auth')
+require('dotenv').config()
 
 function encodeAuthData (token, user) {
   let data = {
@@ -63,7 +64,7 @@ router.get('/google/redirect', async (req, res, next) => {
       }
       const token = auth.generateToken(user)
       const authData = encodeAuthData(token, user)
-      res.redirect('http://localhost:4200/auth/stage-social-redirect?auth=' + authData)
+      res.redirect(process.env.FRONTEND_URL + '/auth/stage-social-redirect?auth=' + authData)
     })(req, res, next)
   } catch (error) {
     res.status(500).json(error)
