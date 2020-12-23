@@ -3,7 +3,10 @@ const router = express.Router()
 const Business = require('../../models/business/business.model')
 const BusinessReview = require('../../models/business/business-review.model')
 const Mongoose = require('mongoose')
-const { NotFoundError, handleError } = require('../../utils/errors')
+const {
+  NotFoundError,
+  handleError
+} = require('../../utils/errors')
 const GetNumber = require('../../utils/get-number')
 
 // GET ALL BUSINESS TYPES
@@ -25,7 +28,7 @@ router.get('/', async (req, res, next) => {
  * lat: number
  * lng: number
  * distance: number
-*/
+ */
 /**
  * sort query paramss::
  * sortBy: distance | name | rating
@@ -52,7 +55,7 @@ router.get('/frontend-listing', async (req, res, next) => {
       distanceFilters = {
         lat: parseFloat(req.query.lat),
         lng: parseFloat(req.query.lng),
-        distance: parseFloat(req.query.distance)
+        distance: parseInt(req.query.distance)
       }
     }
 
@@ -85,12 +88,12 @@ router.get('/frontend-listing', async (req, res, next) => {
           $geoNear: {
             near: {
               type: 'Point',
-              coordinates: [distanceFilters.lat, distanceFilters.lng]
+              coordinates: [distanceFilters.lng, distanceFilters.lat]
             },
             distanceField: 'distance',
             query: filters,
-            maxDistance: distanceFilters.distance,
-            spherical: true
+            spherical: true,
+            maxDistance: distanceFilters.distance
           }
         }, {
           $lookup: {
@@ -285,8 +288,14 @@ router.get('/id/:id', async (req, res, next) => {
     }
     const reviewData = await getReviewData(business._id)
     business = business.toObject()
-    business.reviewCount = reviewData.count
-    business.averageRating = reviewData.averageRating
+    if (reviewData) {
+      business.reviewCount = reviewData.count
+      business.averageRating = reviewData.averageRating
+    } else {
+      business.reviewCount = 0
+      business.averageRating = null
+    }
+
     res.status(200).json(business)
   } catch (e) {
     handleError(e, res)
@@ -407,23 +416,25 @@ async function getReviewCount (businessId) {
 }
 
 async function getAvgRating (businessId) {
-  const ratings = await BusinessReview.aggregate([
-    {
-      $match: {
-        businessId: Mongoose.Types.ObjectId(businessId),
-        active: true
-      }
-    }, {
-      $group: {
-        _id: '$businessId',
-        averageRating: {
-          $avg: '$rating'
-        }
+  const ratings = await BusinessReview.aggregate([{
+    $match: {
+      businessId: Mongoose.Types.ObjectId(businessId),
+      active: true
+    }
+  }, {
+    $group: {
+      _id: '$businessId',
+      averageRating: {
+        $avg: '$rating'
       }
     }
-  ])
+  }])
 
-  return ratings[0].averageRating || null
+  if (ratings[0]) {
+    return ratings[0].averageRating || null
+  } else {
+    return null
+  }
 }
 
 module.exports = router

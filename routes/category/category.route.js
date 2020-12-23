@@ -1,4 +1,5 @@
 const express = require('express')
+const accessAuth = require('../../auth/access-auth')
 const jwtAuth = require('../../auth/jwt-auth')
 const Category = require('../../models/category/category.model')
 const { handleError } = require('../../utils/errors')
@@ -6,7 +7,7 @@ const GetNumber = require('../../utils/get-number')
 const router = express.Router()
 
 // GET ALL categories
-router.get('/', async (req, res, next) => {
+router.get('/', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const documents = await Category.find().sort({ createdAt: -1 }).populate('image').populate('parentCategory')
     res.status(200).json(documents)
