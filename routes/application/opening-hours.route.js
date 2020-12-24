@@ -1,4 +1,5 @@
 const express = require('express')
+const accessAuth = require('../../auth/access-auth')
 const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
 const OpeningHours = require('../../models/application/opening-hours.model')
@@ -22,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', jwtAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const openinghours = new OpeningHours({
       monday: req.body.monday,
@@ -40,7 +41,7 @@ router.post('/', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.put('/:id', jwtAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let openinghours = new OpeningHours({
       _id: req.body.id,
@@ -63,7 +64,7 @@ router.put('/:id', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     await OpeningHours.findByIdAndDelete(req.params.id)
     res.status(200).json('')

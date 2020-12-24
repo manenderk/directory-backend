@@ -4,6 +4,7 @@ const User = require('../../models/user/user.model')
 const UserHelper = require('../../utils/user.helper')
 const { handleError, NotFoundError } = require('../../utils/errors')
 const jwtAuth = require('../../auth/jwt-auth')
+const accessAuth = require('../../auth/access-auth')
 
 // GET ALL USERS
 router.get('/', async (req, res, next) => {
@@ -38,7 +39,7 @@ router.post('/register', async (req, res, next) => {
   }
 })
 
-router.put('/:id', jwtAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const user = new User({
       _id: req.params.id,
@@ -79,7 +80,7 @@ router.post('/reset-password/:id', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id)
     res.sendStatus(200)

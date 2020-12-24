@@ -7,7 +7,7 @@ const GetNumber = require('../../utils/get-number')
 const router = express.Router()
 
 // GET ALL categories
-router.get('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const documents = await Category.find().sort({ createdAt: -1 }).populate('image').populate('parentCategory')
     res.status(200).json(documents)
@@ -41,7 +41,7 @@ router.get('/frontend', async (req, res, next) => {
 })
 
 // ADD Category
-router.post('/', jwtAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let category = new Category({
       name: req.body.name,
@@ -63,7 +63,7 @@ router.post('/', jwtAuth, async (req, res, next) => {
 })
 
 // UPDATE CATEGORY
-router.put('/:id', jwtAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let category = new Category({
       _id: req.params.id,

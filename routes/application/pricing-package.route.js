@@ -1,4 +1,5 @@
 const express = require('express')
+const accessAuth = require('../../auth/access-auth')
 const jwtAuth = require('../../auth/jwt-auth')
 const router = express.Router()
 const PricingPackage = require('../../models/application/pricing-package.model')
@@ -22,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', jwtAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const pricingpackage = new PricingPackage({
       name: req.body.name,
@@ -36,7 +37,7 @@ router.post('/', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.put('/:id', jwtAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let pricingpackage = new PricingPackage({
       _id: req.body.id,
@@ -55,7 +56,7 @@ router.put('/:id', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     await PricingPackage.findByIdAndDelete(req.params.id)
     res.status(200).json('')

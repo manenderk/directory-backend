@@ -4,6 +4,7 @@ const News = require('../../models/news/news.model')
 const { handleError } = require('../../utils/errors')
 const jwtAuth = require('../../auth/jwt-auth')
 const GetNumber = require('../../utils/get-number')
+const accessAuth = require('../../auth/access-auth')
 
 router.get('/', async (req, res, next) => {
   try {
@@ -36,7 +37,7 @@ router.get('/frontend', async (req, res, next) => {
   }
 })
 
-router.post('/', jwtAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let news = new News({
       number: await GetNumber(News),
@@ -56,7 +57,7 @@ router.post('/', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.put('/id/:id', jwtAuth, async (req, res, next) => {
+router.put('/id/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let news = new News({
       _id: req.params.id,
@@ -77,7 +78,7 @@ router.put('/id/:id', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.put('/increse-view-count/:id', async (req, res, next) => {
+router.put('/increse-view-count/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const news = News.findById(req.params.id)
     news.views++

@@ -8,6 +8,8 @@ const {
   handleError
 } = require('../../utils/errors')
 const GetNumber = require('../../utils/get-number')
+const jwtAuth = require('../../auth/jwt-auth')
+const accessAuth = require('../../auth/access-auth')
 
 // GET ALL BUSINESS TYPES
 router.get('/', async (req, res, next) => {
@@ -303,7 +305,7 @@ router.get('/id/:id', async (req, res, next) => {
 })
 
 // ADD BUSINESS
-router.post('/', async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let business = await getBusinessModelFromReqObject(req)
     await business.save()
@@ -315,7 +317,7 @@ router.post('/', async (req, res, next) => {
 })
 
 // UPDATE BUSINESS
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let business = await getBusinessModelFromReqObject(req, req.params.id)
     business = await Business.findByIdAndUpdate(

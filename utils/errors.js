@@ -34,11 +34,19 @@ class BadRequestError extends Error {
   }
 }
 
+class RoleAccessError extends Error {
+  constructor (message = 'access error') {
+    super(message)
+    this.name = errorNames.unauthorized
+  }
+}
+
 module.exports = {
   NotFoundError,
   InternalServerError,
   DuplicateRecordError,
   BadRequestError,
+  RoleAccessError,
   handleError: (err, res) => {
     const error = {
       message: err.name + ': ' + err.message,

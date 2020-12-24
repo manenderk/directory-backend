@@ -3,6 +3,7 @@ const Event = require('../../models/event/event.model')
 const { handleError } = require('../../utils/errors')
 const jwtAuth = require('../../auth/jwt-auth')
 const GetNumber = require('../../utils/get-number')
+const accessAuth = require('../../auth/access-auth')
 const router = express.Router()
 
 // GET ALL events
@@ -86,7 +87,7 @@ router.get('/frontend', async (req, res, next) => {
 })
 
 // ADD Event
-router.post('/', jwtAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let event = new Event({
       number: await GetNumber(Event),
@@ -134,7 +135,7 @@ router.post('/', jwtAuth, async (req, res, next) => {
 })
 
 // UPDATE EVENT
-router.put('/:id', jwtAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     let event = new Event({
       _id: req.params.id,
@@ -185,7 +186,7 @@ router.put('/:id', jwtAuth, async (req, res, next) => {
 })
 
 // Clean up events
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     await Event.findByIdAndDelete(req.params.id)
     res.sendStatus(200).json('')

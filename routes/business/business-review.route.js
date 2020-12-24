@@ -5,6 +5,7 @@ const BusinessReview = require('../../models/business/business-review.model')
 const User = require('../../models/user/user.model')
 const jwtAuth = require('../../auth/jwt-auth')
 const { handleError } = require('../../utils/errors')
+const accessAuth = require('../../auth/access-auth')
 
 router.get('/all', async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ router.get('/all', async (req, res, next) => {
   }
 })
 
-router.get('/pending-reviews', jwtAuth, async (req, res, next) => {
+router.get('/pending-reviews', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const reviews = await BusinessReview.find({
       active: false
@@ -90,7 +91,7 @@ router.post('/add-review', async (req, res, next) => {
   }
 })
 
-router.put('/update-review/:id', jwtAuth, async (req, res, next) => {
+router.put('/update-review/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const updatedReview = BusinessReview.findByIdAndUpdate(
       req.params.id,
@@ -113,7 +114,7 @@ router.put('/update-review/:id', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.put('/moderate-review/:id', jwtAuth, async (req, res, next) => {
+router.put('/moderate-review/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     await BusinessReview.findByIdAndUpdate(req.params.id, {
       active: req.body.active
@@ -126,7 +127,7 @@ router.put('/moderate-review/:id', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     await BusinessReview.findByIdAndDelete(req.params.id)
     res.sendStatus(200)

@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const UI = require('../../models/application/ui.model')
 const jwtAuth = require('../../auth/jwt-auth')
+const accessAuth = require('../../auth/access-auth')
 
 router.get('/get-customizations', async (req, res, next) => {
   try {
@@ -12,7 +13,7 @@ router.get('/get-customizations', async (req, res, next) => {
   }
 })
 
-router.put('/update-customization', jwtAuth, async (req, res, next) => {
+router.put('/update-customization', jwtAuth, accessAuth, async (req, res, next) => {
   try {
     const key = req.body.key
     const value = req.body.value

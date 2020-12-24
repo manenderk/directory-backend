@@ -6,9 +6,10 @@ const base64Img = require('../../utils/img-base-64')
 const path = require('path')
 const jwtAuth = require('../../auth/jwt-auth')
 const { InternalServerError, NotFoundError, handleError } = require('../../utils/errors')
+const accessAuth = require('../../auth/access-auth')
 const uploader = require('../../utils/file-uploader')(config.uploadDirectory, 'file')
 
-router.post('/upload', jwtAuth, uploader, async (req, res, next) => {
+router.post('/upload', jwtAuth, accessAuth, uploader, async (req, res, next) => {
   try {
     const media = new Media({
       fileType: req.body.fileType,
