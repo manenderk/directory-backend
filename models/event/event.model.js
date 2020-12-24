@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 // eslint-disable-next-line no-unused-vars
 const GeoJSON = require('mongoose-geojson-schema')
+const SocialShare = require('../../schemas/social-share.schema')
 
 const EventSchema = new mongoose.Schema({
   number: {
@@ -50,7 +51,7 @@ const EventSchema = new mongoose.Schema({
     default: 1000
   },
   socialLinks: [{
-    type: String
+    type: SocialShare
   }],
   eventImages: [{
     type: mongoose.Schema.Types.ObjectId,
