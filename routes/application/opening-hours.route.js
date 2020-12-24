@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     const openinghours = new OpeningHours({
       monday: req.body.monday,
@@ -41,7 +41,7 @@ router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let openinghours = new OpeningHours({
       _id: req.body.id,
@@ -64,7 +64,7 @@ router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     await OpeningHours.findByIdAndDelete(req.params.id)
     res.status(200).json('')

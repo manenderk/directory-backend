@@ -9,7 +9,7 @@ const { InternalServerError, NotFoundError, handleError } = require('../../utils
 const accessAuth = require('../../auth/access-auth')
 const uploader = require('../../utils/file-uploader')(config.uploadDirectory, 'file')
 
-router.post('/upload', jwtAuth, accessAuth, uploader, async (req, res, next) => {
+router.post('/upload', jwtAuth, accessAuth(['admin']), uploader, async (req, res, next) => {
   try {
     const media = new Media({
       fileType: req.body.fileType,

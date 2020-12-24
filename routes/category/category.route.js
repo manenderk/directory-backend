@@ -41,7 +41,7 @@ router.get('/frontend', async (req, res, next) => {
 })
 
 // ADD Category
-router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let category = new Category({
       name: req.body.name,
@@ -63,7 +63,7 @@ router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
 })
 
 // UPDATE CATEGORY
-router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let category = new Category({
       _id: req.params.id,

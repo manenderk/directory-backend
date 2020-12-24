@@ -13,7 +13,7 @@ router.get('/get-customizations', async (req, res, next) => {
   }
 })
 
-router.put('/update-customization', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/update-customization', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     const key = req.body.key
     const value = req.body.value

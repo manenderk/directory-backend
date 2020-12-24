@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let person = new Person({
       image: req.body.image,
@@ -39,7 +39,7 @@ router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let person = new Person({
       _id: req.body.id,
@@ -59,7 +59,7 @@ router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     await Person.findByIdAndDelete(req.params.id)
     res.status(200).json('')

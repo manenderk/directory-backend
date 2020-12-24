@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     const pricingpackage = new PricingPackage({
       name: req.body.name,
@@ -37,7 +37,7 @@ router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let pricingpackage = new PricingPackage({
       _id: req.body.id,
@@ -56,7 +56,7 @@ router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     await PricingPackage.findByIdAndDelete(req.params.id)
     res.status(200).json('')

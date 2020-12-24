@@ -2,7 +2,10 @@ const { handleError, RoleAccessError } = require('../utils/errors')
 const auth = require('./auth')
 const User = require('../models/user/user.model')
 
-module.exports = function (roles = ['admin']) {
+module.exports = function (roles) {
+  if (!roles) {
+    roles = ['admin']
+  }
   return function (req, res, next) {
     try {
       if (!req[auth.verifiedRequestUserProperty] || !req[auth.verifiedRequestUserProperty]._id) {

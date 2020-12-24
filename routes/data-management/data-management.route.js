@@ -18,7 +18,7 @@ const jwtAuth = require('../../auth/jwt-auth')
 const accessAuth = require('../../auth/access-auth')
 require('dotenv').config()
 
-router.get('/get-csv/:entity', jwtAuth, accessAuth, async (req, res, next) => {
+router.get('/get-csv/:entity', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     const entity = req.params.entity
     let records = null
@@ -57,7 +57,7 @@ router.get('/get-csv/:entity', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/delete-collection/:entity', jwtAuth, accessAuth, async (req, res, next) => {
+router.delete('/delete-collection/:entity', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     if (!process.env.APP_ENV || process.env.APP_ENV !== 'development') {
       throw new BadRequestError('Not Allowed')
@@ -91,7 +91,7 @@ router.delete('/delete-collection/:entity', jwtAuth, accessAuth, async (req, res
   }
 })
 
-router.post('/import/:entity', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/import/:entity', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     const data = req.body
     if (!data) {

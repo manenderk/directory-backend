@@ -87,7 +87,7 @@ router.get('/frontend', async (req, res, next) => {
 })
 
 // ADD Event
-router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let event = new Event({
       number: await GetNumber(Event),
@@ -135,7 +135,7 @@ router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
 })
 
 // UPDATE EVENT
-router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let event = new Event({
       _id: req.params.id,
@@ -186,7 +186,7 @@ router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
 })
 
 // Clean up events
-router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     await Event.findByIdAndDelete(req.params.id)
     res.sendStatus(200).json('')

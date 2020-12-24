@@ -39,7 +39,7 @@ router.post('/register', async (req, res, next) => {
   }
 })
 
-router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     const user = new User({
       _id: req.params.id,
@@ -80,7 +80,7 @@ router.post('/reset-password/:id', jwtAuth, async (req, res, next) => {
   }
 })
 
-router.delete('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id)
     res.sendStatus(200)

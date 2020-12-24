@@ -37,7 +37,7 @@ router.get('/frontend', async (req, res, next) => {
   }
 })
 
-router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let news = new News({
       number: await GetNumber(News),
@@ -57,7 +57,7 @@ router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.put('/id/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/id/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let news = new News({
       _id: req.params.id,
@@ -78,7 +78,7 @@ router.put('/id/:id', jwtAuth, accessAuth, async (req, res, next) => {
   }
 })
 
-router.put('/increse-view-count/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/increse-view-count/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     const news = News.findById(req.params.id)
     news.views++

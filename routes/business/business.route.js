@@ -305,7 +305,7 @@ router.get('/id/:id', async (req, res, next) => {
 })
 
 // ADD BUSINESS
-router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
+router.post('/', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let business = await getBusinessModelFromReqObject(req)
     await business.save()
@@ -317,7 +317,7 @@ router.post('/', jwtAuth, accessAuth, async (req, res, next) => {
 })
 
 // UPDATE BUSINESS
-router.put('/:id', jwtAuth, accessAuth, async (req, res, next) => {
+router.put('/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
   try {
     let business = await getBusinessModelFromReqObject(req, req.params.id)
     business = await Business.findByIdAndUpdate(
