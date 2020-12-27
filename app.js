@@ -46,7 +46,10 @@ mongoose.set('useUnifiedTopology', true)
 
 mongoose.connect(process.env.MONGO_CONN)
   .then(() => console.log('Connected to database'))
-  .catch(() => console.log('Database connection error'))
+  .catch(error => {
+    console.log('Database connection error')
+    console.log(error)
+  })
 /* mongoose.connect('mongodb+srv://clusteruser:Zx8eHnhzG2vENf1k@app-cluster-t6cjp.mongodb.net/TheDirectory?retryWrites=true&w=majority')
   .then(() => console.log('Connected to database'))
   .catch(() => console.log('Database connection error')) */
