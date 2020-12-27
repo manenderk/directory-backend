@@ -44,7 +44,7 @@ mongoose.set('useCreateIndex', true)
 mongoose.set('useFindAndModify', false)
 mongoose.set('useUnifiedTopology', true)
 
-mongoose.connect(process.env.MONGO_CONN)
+mongoose.connect(process.env.MONGO_CONN, {dbName: process.env.MONGO_DB})
   .then(() => console.log('Connected to database'))
   .catch(error => {
     console.log('Database connection error')
