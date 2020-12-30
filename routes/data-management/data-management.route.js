@@ -11,7 +11,7 @@ const config = require('../../config')
 const csvjson = require('csvjson')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
-const { BadRequestError, handleError } = require('../../utils/errors')
+const { BadRequestError, handleError, NotFoundError } = require('../../utils/errors')
 const importCategories = require('./import/import-category')
 const importBusinesses = require('./import/import-business')
 const jwtAuth = require('../../auth/jwt-auth')
@@ -115,6 +115,36 @@ router.post('/import/:entity', jwtAuth, accessAuth(['admin']), async (req, res, 
         throw new BadRequestError('Invalid Entity')
     }
 
+    res.status(200).json({ message: 'success' })
+  } catch (error) {
+    handleError(error, res)
+  }
+})
+
+router.get('/copy-business-data/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const business = await Business.findById(id)
+    if (!business) {
+      throw new NotFoundError()
+    }
+    const businesses = await Business.find()
+    for (const b of businesses) {
+      b.bannerImage = business.bannerImage
+      b.description = business.description
+      b.images = business.images
+      b.languagesSpoken = business.languagesSpoken
+      b.openingHours = business.openingHours
+      b.owner = business.owner
+      b.paymentMethods = business.paymentMethods
+      b.phone = business.phone
+      b.productsAndServices = business.productsAndServicesImages
+      b.productsAndServicesImages = business.productsAndServicesImages
+      b.specialities = business.specialities
+      b.team = business.team
+      b.thumbnailImage = business.thumbnailImage
+      await Business.findByIdAndUpdate(b._id, b)
+    }
     res.status(200).json({ message: 'success' })
   } catch (error) {
     handleError(error, res)
