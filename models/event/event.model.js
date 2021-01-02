@@ -30,13 +30,11 @@ const EventSchema = new mongoose.Schema({
   },
   thumbnailImage: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Media',
-    required: true
+    ref: 'Media'
   },
   bannerImage: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Media',
-    required: true
+    ref: 'Media'
   },
   featured: {
     type: Boolean,
