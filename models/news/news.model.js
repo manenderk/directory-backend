@@ -12,13 +12,11 @@ const NewsSchema = new mongoose.Schema({
   },
   thumbnailImage: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Media',
-    required: true
+    ref: 'Media'
   },
   bannerImage: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Media',
-    required: true
+    ref: 'Media'
   },
   body: {
     type: String,

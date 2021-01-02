@@ -19,6 +19,8 @@ const accessAuth = require('../../auth/access-auth')
 const importEvents = require('./import/import-event')
 const copyBusiness = require('./copy/copy-business')
 const copyEvent = require('./copy/copy-event')
+const importNewss = require('./import/import-news')
+const copyNews = require('./copy/copy-news')
 require('dotenv').config()
 
 router.get('/get-csv/:entity', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
@@ -114,6 +116,7 @@ router.post('/import/:entity', jwtAuth, accessAuth(['admin']), async (req, res, 
         await importEvents(data)
         break
       case 'news':
+        await importNewss(data)
         break
       default:
         throw new BadRequestError('Invalid Entity')
@@ -144,6 +147,7 @@ router.put('/copy/:entity/:id', jwtAuth, accessAuth(['admin']), async (req, res,
         await copyEvent(req.params.id)
         break
       case 'news':
+        await copyNews(req.params.id)
         break
       default:
         throw new BadRequestError('Invalid Entity')
