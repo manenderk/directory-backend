@@ -17,6 +17,8 @@ const importBusinesses = require('./import/import-business')
 const jwtAuth = require('../../auth/jwt-auth')
 const accessAuth = require('../../auth/access-auth')
 const importEvents = require('./import/import-event')
+const copyBusiness = require('./copy/copy-business')
+const copyEvent = require('./copy/copy-event')
 require('dotenv').config()
 
 router.get('/get-csv/:entity', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
@@ -123,7 +125,34 @@ router.post('/import/:entity', jwtAuth, accessAuth(['admin']), async (req, res, 
   }
 })
 
-router.get('/copy-business-data/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
+router.put('/copy/:entity/:id', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      throw new BadRequestError('No record id provided')
+    }
+
+    const entity = req.params.entity
+
+    switch (entity) {
+      case 'category':
+        // await importCategories(data)
+        break
+      case 'business':
+        await copyBusiness(req.params.id)
+        break
+      case 'event':
+        await copyEvent(req.params.id)
+        break
+      case 'news':
+        break
+      default:
+        throw new BadRequestError('Invalid Entity')
+    }
+
+    res.status(200).json({ message: 'success' })
+  } catch (error) {
+    handleError(error, res)
+  }
   try {
     const id = req.params.id
     const business = await Business.findById(id)
