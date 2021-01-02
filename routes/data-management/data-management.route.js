@@ -16,6 +16,7 @@ const importCategories = require('./import/import-category')
 const importBusinesses = require('./import/import-business')
 const jwtAuth = require('../../auth/jwt-auth')
 const accessAuth = require('../../auth/access-auth')
+const importEvents = require('./import/import-event')
 require('dotenv').config()
 
 router.get('/get-csv/:entity', jwtAuth, accessAuth(['admin']), async (req, res, next) => {
@@ -108,6 +109,7 @@ router.post('/import/:entity', jwtAuth, accessAuth(['admin']), async (req, res, 
         await importBusinesses(data)
         break
       case 'event':
+        await importEvents(data)
         break
       case 'news':
         break
